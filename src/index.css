@@ -1,0 +1,168 @@
+/* ═══════════════════════════════════════════════════════════════
+   TruePay — design tokens + primitives
+   Identity: obsidian ink, iris→magenta spectrum, acid-lime "safe"
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── surfaces ── */
+  --ink:        oklch(0.145 0.026 288);
+  --ink-deep:   oklch(0.105 0.022 288);
+  --surface:    oklch(0.205 0.030 288);
+  --surface-2:  oklch(0.255 0.034 288);
+  --surface-3:  oklch(0.305 0.036 288);
+  --line:       oklch(0.325 0.032 288 / 0.9);
+  --line-soft:  oklch(0.325 0.032 288 / 0.45);
+
+  /* ── text ── */
+  --text:       oklch(0.980 0.010 288);
+  --text-dim:   oklch(0.760 0.022 288);
+  --text-faint: oklch(0.585 0.028 288);
+
+  /* ── semantic ── */
+  --safe:   oklch(0.885 0.190 132);   /* acid lime — the signature "verified" */
+  --warn:   oklch(0.845 0.155 78);
+  --danger: oklch(0.680 0.215 20);
+
+  /* ── brand spectrum (driven by JS: --accent) ── */
+  --accent:      #8A5CFF;
+  --accent-2:    #E86FDB;
+  --accent-3:    #4CC9F0;
+  --accent-glow: color-mix(in oklch, var(--accent) 44%, transparent);
+  --accent-wash: color-mix(in oklch, var(--accent) 12%, transparent);
+  --on-accent:   #ffffff;
+  --spectrum: linear-gradient(115deg, var(--accent-3) 0%, var(--accent) 46%, var(--accent-2) 100%);
+
+  /* ── type ── */
+  --font-display:   'Bricolage Grotesque', system-ui, sans-serif;
+  --font-editorial: 'Instrument Serif', Georgia, serif;
+  --font-body:      'Manrope', system-ui, sans-serif;
+  --font-mono:      'JetBrains Mono', ui-monospace, monospace;
+
+  /* ── shape ── */
+  --r-card: 22px;
+  --r-btn:  16px;
+  --r-pill: 999px;
+  --r-tile: 14px;
+
+  /* ── elevation ── */
+  --sh-1: 0 1px 2px oklch(0 0 0 / 0.4);
+  --sh-2: 0 8px 28px oklch(0 0 0 / 0.38);
+  --sh-3: 0 24px 70px oklch(0 0 0 / 0.5);
+}
+
+* { box-sizing: border-box; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+html, body { height: 100%; margin: 0; overflow: hidden; }
+#root { position: fixed; inset: 0; }
+
+body {
+  background: var(--ink-deep);
+  color: var(--text);
+  font-family: var(--font-body);
+  /* it is a prototype — dragging never means "select this text" */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+button { font-family: inherit; color: inherit; }
+
+/* ── scroll ── */
+.scroll { overflow-y: auto; overflow-x: hidden; scrollbar-width: none; overscroll-behavior: contain; }
+.scroll::-webkit-scrollbar { width: 0; height: 0; }
+
+/* ── press affordance ── */
+.press { transition: transform .14s cubic-bezier(.2,.8,.3,1), filter .16s ease; }
+.press:active { transform: scale(.965); filter: brightness(1.08); }
+
+/* ── film grain, sits over the whole stage ── */
+.grain {
+  position: absolute; inset: -50%;
+  pointer-events: none; opacity: .32; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  animation: grainshift 6s steps(6) infinite;
+}
+@keyframes grainshift {
+  0%   { transform: translate(0,0); }
+  20%  { transform: translate(-3%,2%); }
+  40%  { transform: translate(2%,-3%); }
+  60%  { transform: translate(-2%,-2%); }
+  80%  { transform: translate(3%,3%); }
+  100% { transform: translate(0,0); }
+}
+
+/* ── hairline top-light on cards ── */
+.sheen { position: relative; }
+.sheen::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(180deg, oklch(1 0 0 / .07), transparent 42%);
+}
+
+/* ── animations ── */
+@keyframes spin  { to { transform: rotate(360deg); } }
+.spin { animation: spin .8s linear infinite; }
+
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .22; } }
+.blink { animation: blink 1.7s ease-in-out infinite; }
+
+@keyframes scanmove { 0% { top: 14%; } 50% { top: 82%; } 100% { top: 14%; } }
+.scanline { animation: scanmove 1.6s cubic-bezier(.5,0,.5,1) infinite; }
+
+@keyframes haloPulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+  55%      { box-shadow: 0 0 0 18px transparent; }
+}
+.halo { animation: haloPulse 2.1s ease-in-out infinite; }
+
+@keyframes ticker { from { background-position: 0 0; } to { background-position: -200px 0; } }
+
+/* text helpers */
+.mono-label {
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+.num { font-family: var(--font-display); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+
+/* ═══ stage layout ═══════════════════════════════════════════ */
+.stage { --phone-scale: 1; }
+
+/* the scaler keeps its 390×844 layout box, so the wrapper reserves the
+   *scaled* footprint and the stage never overflows */
+.phone-wrap {
+  width: calc(390px * var(--phone-scale));
+  height: calc(844px * var(--phone-scale));
+  flex-shrink: 0;
+}
+.phone-scaler {
+  width: 390px; height: 844px;
+  transform: scale(var(--phone-scale));
+  transform-origin: top left;
+}
+
+.rail, .panel {
+  border-inline: 1px solid var(--line-soft);
+  background: oklch(0.14 0.022 288 / .5);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.rail  { border-left: none; }
+.panel { border-right: none; }
+
+
+@media (max-width: 1180px) { .panel { display: none; } }
+@media (max-width: 900px)  { .rail  { display: none; } }
+
+/* ═══ record mode ════════════════════════════════════════════ */
+/* strips the stage back to the device so a screen capture is clean */
+.stage.recording .rail,
+.stage.recording .panel { display: none; }
+
+/* while a reel plays the picker gets out of the frame; hovering brings it back */
+.demo-bar[data-playing='true'] {
+  opacity: 0;
+  transition: opacity .5s ease .6s;
+}
+.demo-bar[data-playing='true']:hover { opacity: 1; transition: opacity .18s; }
