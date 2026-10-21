@@ -1,0 +1,120 @@
+/* Cairn — feature cards.
+   Glass panes over the feature's own screen, blurred. Using the product's
+   real screens rather than stock photography means every card is sourced
+   from the thing it describes. */
+:root {
+  --ink:    #141920;
+  --text:   #E8EEF4;
+  --dim:    #A9B6C2;
+  --faint:  #76838F;
+  --accent: #8FB2CE;
+  --acid:   #D9E04E;
+  --danger: #E5806F;
+  --safe:   #84B9A4;
+  --glass:      rgba(224, 238, 255, 0.07);
+  --glass-edge: rgba(218, 232, 250, 0.15);
+  --glass-lit:  rgba(224, 238, 255, 0.32);
+}
+
+* { box-sizing: border-box; margin: 0; }
+body {
+  background: var(--ink);
+  font-family: 'Manrope', system-ui, sans-serif;
+  color: var(--text);
+  padding: 40px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.grid {
+  width: 1120px; margin: 0 auto;
+  display: grid; gap: 18px;
+  grid-template-columns: repeat(3, 1fr);
+}
+.wide { grid-column: 1 / -1; }
+
+/* ── the pane ─────────────────────────────────────────────── */
+.card {
+  position: relative; overflow: hidden; isolation: isolate;
+  border-radius: 28px; padding: 26px 28px;
+  min-height: 234px;
+  display: flex; flex-direction: column;
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-top-color: var(--glass-lit);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .36);
+}
+.wide { min-height: 190px; }
+
+/* A light field rather than a photograph. The references put a real subject
+   behind the glass; a portrait phone screenshot cropped to a landscape card
+   is just a smear, so the card carries the feature's own instrument instead
+   and the background does what the photo did — give the glass something to
+   be in front of. */
+.card::before {
+  content: ''; position: absolute; inset: 0; z-index: -2;
+  background:
+    radial-gradient(70% 90% at var(--lx, 78%) var(--ly, 18%), var(--lit, rgba(143,178,206,.42)), transparent 68%),
+    radial-gradient(60% 70% at 12% 92%, rgba(96,120,150,.38), transparent 72%),
+    linear-gradient(158deg, #2E3744 0%, #242B36 56%, #191E26 100%);
+}
+.card::after {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: radial-gradient(90% 70% at 50% 40%, transparent 40%, rgba(12,16,22,.52));
+}
+
+/* ── the instrument each card carries ─────────────────────── */
+.art { position: absolute; right: 20px; top: 22px; pointer-events: none; line-height: 0; }
+.art svg { overflow: visible; }
+.wide .art { top: 50%; transform: translateY(-50%); }
+/* the figure clears the instrument; the caption runs the full width beneath it */
+.title, .fig, .legend, .rail, .ends { max-width: 52%; }
+.foot { max-width: 94%; }
+.wide .title, .wide .fig { max-width: 62%; }
+
+.title { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+.foot {
+  margin-top: auto; font-size: 10.5px; color: var(--dim);
+  font-family: 'Martian Mono', ui-monospace, monospace;
+  letter-spacing: .04em;
+}
+
+/* ── the figure ───────────────────────────────────────────── */
+.fig { display: flex; align-items: baseline; gap: 7px; margin: 16px 0 14px; }
+/* Dot-matrix numerals: the glyph is a window onto a dot field, so the
+   figure reads as something a machine printed rather than typed. */
+.dot {
+  font-size: 66px; font-weight: 700; letter-spacing: .01em; line-height: 1;
+  background-image: radial-gradient(circle at center, var(--text) 42%, transparent 45%);
+  background-size: 4px 4px;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.dot.sm { font-size: 42px; }
+.dot.alarm { background-image: radial-gradient(circle at center, var(--danger) 42%, transparent 45%); }
+.dot.good  { background-image: radial-gradient(circle at center, var(--safe) 42%, transparent 45%); }
+.unit { font-size: 19px; font-weight: 500; color: var(--dim); }
+
+/* ── instruments ──────────────────────────────────────────── */
+.rail { position: relative; height: 5px; border-radius: 3px; background: rgba(232,238,244,.16); }
+.rail i { position: absolute; inset: 0 auto 0 0; border-radius: 3px; background: var(--accent); }
+.mark {
+  position: absolute; top: -7px; width: 0; height: 0;
+  border-left: 5px solid transparent; border-right: 5px solid transparent;
+  border-top: 7px solid var(--acid);
+}
+.ends { display: flex; justify-content: space-between; margin-top: 8px;
+  font-family: 'Martian Mono', ui-monospace, monospace; font-size: 9px; color: var(--faint); }
+
+/* a vertical tick scale, as on an instrument */
+.scale { position: absolute; top: 26px; right: 28px; display: flex; flex-direction: column; gap: 3px; align-items: flex-end; }
+.scale s { display: block; height: 1.5px; background: rgba(232,238,244,.62); text-decoration: none; }
+.scale s.lit { background: var(--acid); }
+
+.legend { display: flex; flex-direction: column; gap: 7px; }
+.legend div { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--dim); }
+.legend b { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); }
+.legend .on b { background: var(--text); }
+.legend .on { color: var(--text); }
+
+.row { display: flex; gap: 26px; align-items: flex-end; }

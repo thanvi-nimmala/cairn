@@ -57,7 +57,7 @@ export function PhoneFrame({ children, mood = 'calm', bare = false }: {
         <div style={{ position: 'relative', height: '100%', zIndex: 10 }}>{children}</div>
         <div style={{
           position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)',
-          width: 134, height: 5, borderRadius: 3, background: 'oklch(1 0 0 / .35)', zIndex: 300,
+          width: 134, height: 5, borderRadius: 3, background: 'rgba(26, 29, 26, 0.26)', zIndex: 300,
         }} />
       </div>
     )
@@ -69,7 +69,7 @@ export function PhoneFrame({ children, mood = 'calm', bare = false }: {
       <div aria-hidden style={{
         position: 'absolute', inset: -90, borderRadius: '50%', pointerEvents: 'none',
         background: mood === 'alert'
-          ? 'radial-gradient(closest-side, color-mix(in oklch, var(--danger) 30%, transparent), transparent 74%)'
+          ? 'radial-gradient(closest-side, color-mix(in srgb, var(--danger) 30%, transparent), transparent 74%)'
           : 'radial-gradient(closest-side, var(--accent-glow), transparent 72%)',
         filter: 'blur(50px)', opacity: 0.75, transition: 'background .8s ease',
       }} />
@@ -99,7 +99,7 @@ export function PhoneFrame({ children, mood = 'calm', bare = false }: {
           {/* home indicator */}
           <div style={{
             position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)',
-            width: 134, height: 5, borderRadius: 3, background: 'oklch(1 0 0 / .35)', zIndex: 300,
+            width: 134, height: 5, borderRadius: 3, background: 'rgba(26, 29, 26, 0.26)', zIndex: 300,
           }} />
         </div>
       </div>

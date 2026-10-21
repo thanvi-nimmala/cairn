@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { SNAP } from '../lib/motion'
 import { Icon } from '../components/Icon'
 import { Guilloche } from '../components/Guilloche'
 import { Button, Card, Sheet, Switch } from '../components/ui'
@@ -18,7 +19,7 @@ function CardFace({ c, frozen, active, onClick }: { c: PayCard; frozen: boolean;
       onClick={onClick}
       data-demo={`card-${c.id}`}
       animate={{ scale: active ? 1 : 0.955, opacity: active ? 1 : 0.62 }}
-      transition={{ type: 'spring', stiffness: 340, damping: 30 }}
+      transition={SNAP}
       style={{
         position: 'relative', width: '100%', aspectRatio: '1.586', flexShrink: 0,
         borderRadius: 'calc(var(--r-card) - 2px)', overflow: 'hidden', cursor: 'pointer',
@@ -67,10 +68,10 @@ function CardFace({ c, frozen, active, onClick }: { c: PayCard; frozen: boolean;
           style={{
             position: 'absolute', inset: 0, display: 'grid', placeItems: 'center',
             // frost, not erasure — the card must still read as itself
-            background: 'linear-gradient(155deg, oklch(0.8 0.05 225 / .18), oklch(0.6 0.04 250 / .1))',
-            backdropFilter: 'blur(2.5px) saturate(70%)',
-            WebkitBackdropFilter: 'blur(2.5px) saturate(70%)',
-            boxShadow: 'inset 0 0 60px oklch(0.85 0.05 225 / .22)',
+            background: 'linear-gradient(155deg, rgba(255,255,255,.26), rgba(255,255,255,.10))',
+            backdropFilter: 'blur(3px) saturate(65%)',
+            WebkitBackdropFilter: 'blur(3px) saturate(65%)',
+            boxShadow: 'inset 0 0 70px rgba(255,255,255,.26)',
           }}
         >
           <div style={{

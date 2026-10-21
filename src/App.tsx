@@ -23,7 +23,7 @@ import { TokensPanel } from './stage/TokensPanel'
 import { SCENES, type SceneId } from './stage/scenes'
 
 import { ACTIVITY } from './lib/data'
-import { DEFAULT_THEME, applyTheme, type Theme } from './lib/theme'
+import { DEFAULT_THEME, applyTheme, type Theme, SCHEMES } from './lib/theme'
 import type { Txn } from './lib/types'
 
 type Phase = 'onboarding' | 'app'
@@ -31,9 +31,15 @@ type Overlay = { type: 'pay' } | { type: 'fraud' } | { type: 'cards' } | { type:
 
 /** ?shot=<scene> renders one screen alone at 390x844 for still capture */
 const SHOT = new URLSearchParams(location.search).get('shot')
+/** ?scheme=<name> overrides the palette, so a colour study is a URL not a rebuild */
+const SCHEME = new URLSearchParams(location.search).get('scheme')
+if (SHOT) document.documentElement.dataset.still = ''
 
 export default function App() {
-  const [theme, setTheme] = useState<Theme>(DEFAULT_THEME)
+  const [theme, setTheme] = useState<Theme>(() => {
+    const picked = SCHEME && SCHEMES.find((s) => s.name.toLowerCase() === SCHEME.toLowerCase())
+    return picked ? { ...DEFAULT_THEME, accent: picked.accent } : DEFAULT_THEME
+  })
   const [phase, setPhase] = useState<Phase>('onboarding')
   const [onbStep, setOnbStep] = useState(0)
   const [tab, setTab] = useState<Tab>('home')
@@ -195,13 +201,13 @@ export default function App() {
       <div aria-hidden style={{
         position: 'absolute', inset: 0,
         background:
-          'radial-gradient(1100px 620px at 50% 40%, color-mix(in oklch, var(--accent) 13%, transparent), transparent 70%),' +
-          'radial-gradient(900px 500px at 12% 90%, color-mix(in oklch, var(--accent-3) 9%, transparent), transparent 68%),' +
+          'radial-gradient(1100px 620px at 50% 40%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 70%),' +
+          'radial-gradient(900px 500px at 12% 90%, color-mix(in srgb, var(--accent-3) 9%, transparent), transparent 68%),' +
           'var(--ink-deep)',
       }} />
       <div aria-hidden style={{
         position: 'absolute', inset: 0, opacity: 0.5,
-        backgroundImage: 'radial-gradient(oklch(1 0 0 / .055) 1px, transparent 1px)',
+        backgroundImage: 'radial-gradient(rgba(26, 29, 26, .055) 1px, transparent 1px)',
         backgroundSize: '26px 26px',
         maskImage: 'radial-gradient(closest-side at 50% 45%, transparent 32%, black 90%)',
         WebkitMaskImage: 'radial-gradient(closest-side at 50% 45%, transparent 32%, black 90%)',

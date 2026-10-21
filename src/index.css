@@ -1,53 +1,116 @@
 /* ═══════════════════════════════════════════════════════════════
-   TruePay — design tokens + primitives
-   Identity: obsidian ink, iris→magenta spectrum, acid-lime "safe"
+   Cairn — design tokens + primitives
+   Identity: plaster ground, sage accent, one acid tick for the scanner
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── surfaces ── */
-  --ink:        oklch(0.145 0.026 288);
-  --ink-deep:   oklch(0.105 0.022 288);
-  --surface:    oklch(0.205 0.030 288);
-  --surface-2:  oklch(0.255 0.034 288);
-  --surface-3:  oklch(0.305 0.036 288);
-  --line:       oklch(0.325 0.032 288 / 0.9);
-  --line-soft:  oklch(0.325 0.032 288 / 0.45);
+  /* ── surfaces ── (light: "ink" is the ground the phone sits on) ── */
+  --ink:        #1B212A;
+  --ink-deep:   #141920;
+  --surface:    #28313C;
+  --surface-2:  #222A34;
+  --surface-3:  #2F3A46;
+  --line:       #37424F;
+  --line-soft:  #2E3843;
 
   /* ── text ── */
-  --text:       oklch(0.980 0.010 288);
-  --text-dim:   oklch(0.760 0.022 288);
-  --text-faint: oklch(0.585 0.028 288);
+  --text:       #E8EEF4;
+  --text-dim:   #A9B6C2;
+  --text-faint: #76838F;
 
   /* ── semantic ── */
-  --safe:   oklch(0.885 0.190 132);   /* acid lime — the signature "verified" */
-  --warn:   oklch(0.845 0.155 78);
-  --danger: oklch(0.680 0.215 20);
+  --safe:   #84B9A4;            /* sage — a protection is set */
+  --warn:   #D6AF5C;
+  --danger: #E5806F;
+  --scan:   #C7E32F;            /* the one acid tick, scanner only */
+  --safe-wash:   #1E2C2A;
+  --danger-wash: #36222A;
 
-  /* ── brand spectrum (driven by JS: --accent) ── */
-  --accent:      #8A5CFF;
-  --accent-2:    #E86FDB;
-  --accent-3:    #4CC9F0;
-  --accent-glow: color-mix(in oklch, var(--accent) 44%, transparent);
-  --accent-wash: color-mix(in oklch, var(--accent) 12%, transparent);
+  /* ── brand (driven by JS: --accent) ── */
+  --accent:      #8FB2CE;
+  --accent-2:    #7898B2;
+  --accent-3:    #5B7F9A;
+  --accent-glow: color-mix(in srgb, var(--accent) 26%, transparent);
+  --accent-wash: #27323D;
   --on-accent:   #ffffff;
-  --spectrum: linear-gradient(115deg, var(--accent-3) 0%, var(--accent) 46%, var(--accent-2) 100%);
+  /* flat, not a gradient — the old spectrum was the loudest AI tell */
+  --spectrum: var(--accent);
 
   /* ── type ── */
-  --font-display:   'Bricolage Grotesque', system-ui, sans-serif;
-  --font-editorial: 'Instrument Serif', Georgia, serif;
+  --font-display:   'Manrope', system-ui, sans-serif;
+  --font-editorial: 'Manrope', system-ui, sans-serif;
   --font-body:      'Manrope', system-ui, sans-serif;
-  --font-mono:      'JetBrains Mono', ui-monospace, monospace;
+  --font-mono:      'Martian Mono', ui-monospace, monospace;
+
+  /* ── the ground ──
+     Every screen sits on this. Driven by the scheme so the whole app
+     re-tints from one place rather than four hardcoded gradients. */
+  --field-1:     #2E3744;
+  --field-2:     #242B36;
+  --field-3:     #191E26;
+  --field-bloom: rgba(96, 120, 150, 0.42);
+  /* the light falling on the top of the ground. White is right on plaster and
+     burns a hole in anything dark, so the scheme owns it. */
+  --field-lift:  rgba(150, 172, 196, 0.26);
+  /* the hero variant runs the other way: deeper at the top */
+  --hero-1:      #3A4654;
+  --hero-2:      #28313C;
+  --hero-3:      #1B2129;
+  --hero-glow:   rgba(96, 124, 158, 0.44);
+  --hero-wash:   rgba(86, 108, 134, 0.46);
+  /* the scanner inverts: light at the rim, near-black at the core */
+  --scan-rim:    #39414F;
+  --scan-core:   #020306;
+  --scan-tick:   rgba(226, 240, 246, 0.88);
+
+  /* ink-on-paper marks: hairlines, gridlines, chart fills. These were
+     hardcoded rgba(26,29,26,…) and so stayed dark-on-dark in a dark scheme. */
+  --hairline:   rgba(232, 238, 244, 0.12);
+  --grid:       rgba(232, 238, 244, 0.14);
+  --rule:       rgba(232, 238, 244, 0.28);
+  --rule-soft:  rgba(232, 238, 244, 0.38);
+  --fill-top:   rgba(232, 238, 244, 0.16);
+  --fill-btm:   rgba(232, 238, 244, 0.02);
+  --chip:       rgba(232, 238, 244, 0.08);
+
+  /* frosted by default; a dark scheme smokes these instead */
+  --glass:        rgba(224, 238, 255, 0.07);
+  --glass-2:      rgba(224, 238, 255, 0.13);
+  --glass-edge:   rgba(218, 232, 250, 0.15);
+  --glass-lit:    rgba(224, 238, 255, 0.32);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
+
+  /* the cairn, base to crown — interpolated per scheme by applyTheme */
+  --stone-1: #4E5A69; --stone-2: #636F7D; --stone-3: #788491;
+  --stone-4: #8C98A6; --stone-5: #A1ADBA; --stone-6: #B6C2CE;
+  --stone-d1: #CFD7DF; --stone-d2: #C0C8D0; --stone-d3: #B1B9C2;
+  --stone-d4: #A1AAB3; --stone-d5: #929BA5; --stone-d6: #838C96;
 
   /* ── shape ── */
-  --r-card: 22px;
-  --r-btn:  16px;
+  --r-card: 26px;
+  --r-btn:  28px;
   --r-pill: 999px;
-  --r-tile: 14px;
+  --r-tile: 18px;
 
-  /* ── elevation ── */
-  --sh-1: 0 1px 2px oklch(0 0 0 / 0.4);
-  --sh-2: 0 8px 28px oklch(0 0 0 / 0.38);
-  --sh-3: 0 24px 70px oklch(0 0 0 / 0.5);
+  /* ── elevation — light and wide, never a dark halo ── */
+  --sh-1: 0 1px 2px rgba(26, 29, 26, 0.05);
+  --sh-2: 0 8px 28px rgba(26, 29, 26, 0.07);
+  --sh-3: 0 24px 70px rgba(26, 29, 26, 0.10);
+}
+
+/* ── stage chrome ─────────────────────────────────────────────
+   The rail, the token panel and the demo bar are tools AROUND the
+   prototype, not part of it. They borrowed the app's tokens, so
+   switching the app to a dark scheme turned the chrome's own text
+   cream on a white rail. They get their own fixed palette. */
+:root {
+  --stage-text:  #1A1D1A;
+  --stage-dim:   #6B716B;
+  --stage-faint: #9BA09B;
+  --stage-line:  #E2E5E0;
+  --stage-soft:  #EAECE7;
+  --stage-panel: rgba(252, 252, 251, 0.94);
+  --stage-tile:  #EFEFED;
 }
 
 * { box-sizing: border-box; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
@@ -72,12 +135,12 @@ button { font-family: inherit; color: inherit; }
 
 /* ── press affordance ── */
 .press { transition: transform .14s cubic-bezier(.2,.8,.3,1), filter .16s ease; }
-.press:active { transform: scale(.965); filter: brightness(1.08); }
+.press:active { transform: scale(.975); filter: brightness(.97); }
 
 /* ── film grain, sits over the whole stage ── */
 .grain {
   position: absolute; inset: -50%;
-  pointer-events: none; opacity: .32; mix-blend-mode: overlay;
+  pointer-events: none; opacity: .14; mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
   animation: grainshift 6s steps(6) infinite;
 }
@@ -90,14 +153,47 @@ button { font-family: inherit; color: inherit; }
   100% { transform: translate(0,0); }
 }
 
-/* ── hairline top-light on cards ── */
-.sheen { position: relative; }
-.sheen::after {
-  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-  background: linear-gradient(180deg, oklch(1 0 0 / .07), transparent 42%);
+/* ── cards sit on the ground; they are not drawn on it ── */
+.sheen { position: relative; box-shadow: var(--sh-2); }
+
+/* ── frosted surface ──────────────────────────────────────────
+   The field shows through rather than being covered. The light
+   top border is what sells it as glass: a lit edge where the
+   pane catches the light, not a drawn outline. */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  border: 1px solid var(--glass-edge);
+  border-top-color: var(--glass-lit);
+  box-shadow: 0 6px 24px var(--glass-shadow);
+}
+.glass-strong {
+  background: var(--glass-2);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid var(--glass-edge);
+  border-top-color: var(--glass-lit);
+  box-shadow: 0 8px 28px var(--glass-shadow);
+}
+/* on the scanner the pane is smoked, not frosted */
+.glass-dark {
+  background: rgba(12, 16, 13, 0.42);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-top-color: rgba(255, 255, 255, 0.3);
 }
 
 /* ── animations ── */
+/* A line drawing itself. The dash length is measured at runtime, so the
+   default state is fully drawn — if the measure never happens the chart
+   still shows, which is the failure mode we want. */
+@keyframes drawline { to { stroke-dashoffset: 0; } }
+
+/* a mark growing up off the baseline */
+@keyframes rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
 @keyframes spin  { to { transform: rotate(360deg); } }
 .spin { animation: spin .8s linear infinite; }
 
@@ -109,7 +205,7 @@ button { font-family: inherit; color: inherit; }
 
 @keyframes haloPulse {
   0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
-  55%      { box-shadow: 0 0 0 18px transparent; }
+  55%      { box-shadow: 0 0 0 14px transparent; }
 }
 .halo { animation: haloPulse 2.1s ease-in-out infinite; }
 
@@ -117,10 +213,17 @@ button { font-family: inherit; color: inherit; }
 
 /* text helpers */
 .mono-label {
-  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .09em;
+  font-family: var(--font-mono); font-size: 9px; font-weight: 600; letter-spacing: .13em;
   text-transform: uppercase; color: var(--text-faint);
 }
-.num { font-family: var(--font-display); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.num { font-family: var(--font-display); font-weight: 300; font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+
+/* capture mode: land every entrance on its final frame */
+html[data-still] *, html[data-still] *::before, html[data-still] *::after {
+  animation-delay: 0s !important;
+  animation-duration: .001ms !important;
+  transition-duration: .001ms !important;
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
@@ -143,8 +246,9 @@ button { font-family: inherit; color: inherit; }
 }
 
 .rail, .panel {
-  border-inline: 1px solid var(--line-soft);
-  background: oklch(0.14 0.022 288 / .5);
+  border-inline: 1px solid var(--stage-line);
+  background: var(--stage-panel);
+  color: var(--stage-text);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }

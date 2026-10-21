@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>TruePay — card cover</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- the prototype's own faces, same request as src/index.html -->
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<!-- the prototype's own tokens, so the card can never drift from the app -->
+<link rel="stylesheet" href="/src/index.css" />
+<style>
+  html,body{margin:0;height:auto;overflow:visible;background:#fff;display:grid;place-items:center;user-select:none}
+  canvas{width:520px;height:796px;display:block}
+  body.cap{background:#000;place-items:start}
+  body.cap canvas{width:1040px;height:1592px}
+</style>
+</head>
+<body>
+<canvas id="c" width="1040" height="1592"></canvas>
+<script type="module">
+import { render, readTokens, FPS, TOTAL, DUR } from './scene.js';
+const cv = document.getElementById('c');
+const ctx = cv.getContext('2d');
+const q = new URLSearchParams(location.search);
+
+await document.fonts.ready;
+await Promise.all([
+  document.fonts.load('700 60px "Bricolage Grotesque"'),
+  document.fonts.load('500 17px "Manrope"'),
+  document.fonts.load('500 14px "JetBrains Mono"'),
+]);
+readTokens();
+
+if (q.has('capture')) {
+  document.body.classList.add('cap');
+  for (let n = 0; n < TOTAL; n++) {
+    render(ctx, n / FPS);
+    const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+    await fetch('/__frame/' + String(n).padStart(4, '0'), { method: 'POST', body: blob });
+  }
+  await fetch('/__done', { method: 'POST' });
+  document.title = 'done';
+} else if (q.has('t')) {
+  render(ctx, parseFloat(q.get('t')));
+} else if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  render(ctx, 4.8);
+} else {
+  const t0 = performance.now();
+  const loop = () => { render(ctx, ((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); };
+  loop();
+}
+</script>
+</body>
+</html>

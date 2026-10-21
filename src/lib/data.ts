@@ -1,37 +1,37 @@
 import type { Contact, MonitorEvent, PayCard, Protection, Txn } from './types'
 
 export const USER = {
-  name: 'Maya Okonkwo',
-  first: 'Maya',
-  handle: '@mayao',
-  initials: 'MO',
+  name: 'Elena Marsh',
+  first: 'Elena',
+  handle: '@elenam',
+  initials: 'EM',
   balance: 8642.18,
-  accountType: 'TruePay Secure · Personal',
+  accountType: 'Cairn Secure · Personal',
   card: '•••• 4827',
   score: 96,
-  hue: 295,
+  hue: 152,
 }
 
-export const BUSINESS = { name: 'Okonkwo Studio', type: 'Business account' }
+export const BUSINESS = { name: 'Marsh & Co.', type: 'Business account' }
 
 export const CONTACTS: Contact[] = [
-  { id: 'c1', name: 'Daniel Reyes',  handle: '@dreyes',       initials: 'DR', hue: 282, verified: true,  known: '3 yrs' },
-  { id: 'c2', name: 'Priya Nair',    handle: '@priyan',       initials: 'PN', hue: 205, verified: true,  known: '2 yrs' },
-  { id: 'c3', name: 'Jordan Blake',  handle: '@jblake',       initials: 'JB', hue: 148, verified: true,  known: '11 mo' },
-  { id: 'c4', name: 'Cafe Lumière',  handle: '@cafelumiere',  initials: 'CL', hue: 38,  verified: true,  known: '1 yr', biz: true },
-  { id: 'c5', name: 'Sam Whitfield', handle: '@samw',         initials: 'SW', hue: 332, verified: false, known: 'new' },
+  { id: 'c1', name: 'Dad',             handle: '@rajeshn',  initials: 'D',  hue: 152, verified: true,  known: '5 yrs' },
+  { id: 'c2', name: 'Ravi M.',         handle: '@ravim',    initials: 'RM', hue: 152, verified: true,  known: '3 yrs' },
+  { id: 'c3', name: 'Hannah — rent',   handle: '@hannahq',  initials: 'H',  hue: 148, verified: true,  known: '2 yrs' },
+  { id: 'c4', name: 'Nadia K.',        handle: '@nadiak',   initials: 'NK', hue: 96,  verified: true,  known: '8 mo' },
+  { id: 'c5', name: 'SQ *SIDECAR',     handle: '@sidecar',  initials: 'SC', hue: 38,  verified: false, known: 'new', biz: true },
 ]
 
 export const ACTIVITY: Txn[] = [
   {
-    id: 't1', kind: 'out', party: 'Cafe Lumière', handle: '@cafelumiere', initials: 'CL', hue: 38,
-    amount: 18.4, when: 'Today · 9:24 AM', cat: 'Dining', method: 'TruePay •••• 4827',
+    id: 't1', kind: 'out', party: 'SQ *SIDECAR DOUGHNUTS', handle: '@sidecar', initials: 'SC', hue: 38,
+    amount: 18.4, when: 'Today · 9:24 AM', cat: 'Dining', method: 'Cairn •••• 4827',
     risk: 'safe', note: 'Morning order', biz: true,
   },
   {
-    id: 't2', kind: 'flagged', party: 'GX Digital Goods', handle: '@gxstore', initials: 'GX', hue: 16,
-    amount: 482, when: 'Today · 8:51 AM', cat: 'Online purchase', method: 'TruePay •••• 4827',
-    risk: 'high', note: 'Held by TruePay AI',
+    id: 't2', kind: 'flagged', party: 'DNH*LUMOSTORE LTD', handle: '@lumostore', initials: 'LS', hue: 16,
+    amount: 482, when: 'Today · 8:51 AM', cat: 'Online purchase', method: 'Cairn •••• 4827',
+    risk: 'high', note: 'Held by Cairn',
     factors: [
       { label: 'Unknown merchant',   detail: "First payment to this account, ever",     level: 'high', weight: 0.94 },
       { label: 'Unusual amount',     detail: '6.2× your typical online purchase',        level: 'high', weight: 0.86 },
@@ -41,23 +41,23 @@ export const ACTIVITY: Txn[] = [
     ],
   },
   {
-    id: 't3', kind: 'in', party: 'Daniel Reyes', handle: '@dreyes', initials: 'DR', hue: 282,
-    amount: 120, when: 'Yesterday · 6:12 PM', cat: 'Transfer', method: 'TruePay balance',
+    id: 't3', kind: 'in', party: 'Ravi M.', handle: '@ravim', initials: 'RM', hue: 152,
+    amount: 120, when: 'Yesterday · 6:12 PM', cat: 'Transfer', method: 'Cairn balance',
     risk: 'safe', note: 'Dinner split',
   },
   {
-    id: 't4', kind: 'out', party: 'Metro Transit', handle: '@metro', initials: 'MT', hue: 212,
-    amount: 2.75, when: 'Yesterday · 8:03 AM', cat: 'Transport', method: 'TruePay •••• 4827',
+    id: 't4', kind: 'out', party: 'Metro Transit', handle: '@metro', initials: 'MT', hue: 152,
+    amount: 2.75, when: 'Yesterday · 8:03 AM', cat: 'Transport', method: 'Cairn •••• 4827',
     risk: 'safe', note: 'Tap to ride', biz: true,
   },
   {
-    id: 't5', kind: 'in', party: 'Okonkwo Studio', handle: '@okonkwostudio', initials: 'OS', hue: 296,
+    id: 't5', kind: 'in', party: 'Marsh & Co.', handle: '@marshco', initials: 'MC', hue: 152,
     amount: 1450, when: 'Mon · 11:30 AM', cat: 'Invoice', method: 'Business payout',
     risk: 'safe', note: 'Invoice #2041 paid', biz: true,
   },
   {
-    id: 't6', kind: 'out', party: 'Priya Nair', handle: '@priyan', initials: 'PN', hue: 205,
-    amount: 45, when: 'Sun · 2:18 PM', cat: 'Transfer', method: 'TruePay balance',
+    id: 't6', kind: 'out', party: 'Nadia K.', handle: '@nadiak', initials: 'NK', hue: 152,
+    amount: 45, when: 'Sun · 2:18 PM', cat: 'Transfer', method: 'Cairn balance',
     risk: 'safe', note: 'Concert tickets',
   },
   {
@@ -77,17 +77,17 @@ export const PROTECTIONS: Protection[] = [
 ]
 
 export const MONITORING: MonitorEvent[] = [
-  { id: 'm1', icon: 'shield',   tone: 'warn',  title: 'AI flagged a transaction',   detail: 'GX Digital Goods · $482.00 held for review', when: '8:51 AM' },
-  { id: 'm2', icon: 'faceid',   tone: 'safe',  title: 'Face ID approved a payment', detail: 'Cafe Lumière · $18.40',                      when: '9:24 AM' },
+  { id: 'm1', icon: 'shield',   tone: 'warn',  title: 'AI flagged a transaction',   detail: 'DNH*LUMOSTORE LTD · $482.00 held for review', when: '8:51 AM' },
+  { id: 'm2', icon: 'faceid',   tone: 'safe',  title: 'Face ID approved a payment', detail: 'SQ *SIDECAR DOUGHNUTS · $18.40',                      when: '9:24 AM' },
   { id: 'm3', icon: 'lock',     tone: 'safe',  title: 'Encryption keys rotated',    detail: 'Automatic 4-hour cycle completed',           when: '7:00 AM' },
   { id: 'm4', icon: 'user',     tone: 'safe',  title: 'New sign-in verified',       detail: 'iPhone 16 Pro · this device',                when: 'Yesterday' },
   { id: 'm5', icon: 'pin',      tone: 'safe',  title: 'Location confirmed',         detail: 'Brooklyn, NY — matches your pattern',        when: 'Yesterday' },
 ]
 
 export const CARDS: PayCard[] = [
-  { id: 'k1', label: 'TruePay Secure',  kind: 'physical', last4: '4827', expiry: '09/29', frozen: false, spent: 1284.5, limit: 4000, hue: 288 },
-  { id: 'k2', label: 'Subscriptions',   kind: 'virtual',  last4: '9931', expiry: '02/28', frozen: false, spent: 96,     limit: 250,  hue: 196 },
-  { id: 'k3', label: 'Okonkwo Studio',  kind: 'business', last4: '5510', expiry: '11/30', frozen: true,  spent: 3120,   limit: 9000, hue: 332 },
+  { id: 'k1', label: 'Cairn Secure',  kind: 'physical', last4: '4827', expiry: '09/29', frozen: false, spent: 1284.5, limit: 4000, hue: 152 },
+  { id: 'k2', label: 'Subscriptions',   kind: 'virtual',  last4: '9931', expiry: '02/28', frozen: false, spent: 96,     limit: 250,  hue: 128 },
+  { id: 'k3', label: 'Marsh & Co.',  kind: 'business', last4: '5510', expiry: '11/30', frozen: true,  spent: 3120,   limit: 9000, hue: 96 },
 ]
 
 /** live ticker lines for the security console */

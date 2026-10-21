@@ -1,0 +1,35 @@
+<!doctype html><meta charset=utf-8>
+<style>body{margin:0;background:#EFF0EC;font:13px/1.4 system-ui;padding:24px}
+svg{display:block}.row{display:flex;gap:28px;align-items:flex-end;margin-bottom:34px}</style>
+<div class=row id=single></div><div class=row id=stacks></div>
+<script>
+function rng(seed){let s=seed>>>0||1;return()=>{s^=s<<13;s^=s>>>17;s^=s<<5;return((s>>>0)%100000)/100000}}
+function stonePath(seed,rx,ry,N=22){const r=rng(seed);
+ const harm=[2,3,4,5].map((k,i)=>({k,phase:r()*Math.PI*2,amp:(0.058-i*0.013)*(0.7+r()*0.6)}));
+ const pts=[];for(let i=0;i<N;i++){const a=(i/N)*Math.PI*2;let w=1;
+  for(const h of harm)w+=h.amp*Math.sin(h.k*a+h.phase);
+  pts.push([Math.cos(a)*rx*w,Math.sin(a)*ry*w]);}
+ const at=i=>pts[(i+N)%N];let d=`M${at(0)[0].toFixed(2)},${at(0)[1].toFixed(2)}`;
+ for(let i=0;i<N;i++){const[x0,y0]=at(i-1),[x1,y1]=at(i),[x2,y2]=at(i+1),[x3,y3]=at(i+2);
+  d+=`C${(x1+(x2-x0)/6).toFixed(2)},${(y1+(y2-y0)/6).toFixed(2)} ${(x2-(x3-x1)/6).toFixed(2)},${(y2-(y3-y1)/6).toFixed(2)} ${x2.toFixed(2)},${y2.toFixed(2)}`;}
+ return d+'Z';}
+const STONES=[{w:.46,h:.113,rot:-.05,dx:0,seed:3},{w:.36,h:.106,rot:.11,dx:-.06,seed:17},
+ {w:.40,h:.098,rot:-.08,dx:.06,seed:29},{w:.30,h:.108,rot:.14,dx:-.04,seed:41},
+ {w:.33,h:.092,rot:-.12,dx:.03,seed:53},{w:.22,h:.085,rot:.09,dx:.05,seed:67}];
+// isolated shapes, big
+let h='';STONES.forEach(s=>{h+=`<svg width=140 height=90 viewBox="-70 -45 140 90"><path d="${stonePath(s.seed,60,30)}" fill="#8E998F"/></svg>`;});
+single.innerHTML=h;
+// stacks at three tones
+const TONES=[['#7E8A80','#8A958B','#96A097','#A2ABA2','#AEB6AE','#B9C0B9'],
+             ['#8E998F','#8E998F','#8E998F','#8E998F','#8E998F','#8E998F'],
+             ['#5F7A68','#6C8574','#7A9081','#889B8D','#96A699','#A4B1A5']];
+let g='';TONES.forEach((tone,ti)=>{
+ const S=190,PAD=20;let inner='',y=0;
+ STONES.forEach((s,i)=>{const rx=s.w*S,ry=s.h*S;y-=ry*1.74;
+  inner+=`<g transform="translate(${s.dx*S},${y}) rotate(${s.rot*57.3})">`+
+   (i<5?`<path d="${stonePath(s.seed,rx,ry)}" fill="${tone[i]}" stroke="#EFF0EC" stroke-width="3.5" paint-order="stroke fill"/>`
+       :`<path d="${stonePath(s.seed,rx,ry)}" fill="none" stroke="#C3C7C2" stroke-width="1.4" stroke-dasharray="3 4"/>`)+'</g>';
+  y-=ry*0.26;});
+ g+=`<svg width=${S} height=${S+PAD} viewBox="${-S/2} ${y-PAD} ${S} ${S+PAD}">${inner}</svg>`;});
+stacks.innerHTML=g;
+</script>

@@ -3,18 +3,19 @@ import { useEffect, useRef } from 'react'
 export type Mood = 'calm' | 'alert' | 'success' | 'scan'
 
 const MOODS: Record<Mood, { stops: string[]; speed: number; energy: number }> = {
-  calm:    { stops: ['--accent', '--accent-3', '--accent-2'], speed: 0.55, energy: 0.9 },
-  scan:    { stops: ['--accent-3', '--accent', '--accent'],   speed: 1.5,  energy: 1.15 },
-  alert:   { stops: ['--danger', '--warn', '--danger'],       speed: 1.9,  energy: 1.35 },
-  success: { stops: ['--safe', '--accent-3', '--safe'],       speed: 0.7,  energy: 1.0 },
+  calm:    { stops: ['--accent-3', '--accent-2', '--accent-3'], speed: 0.4,  energy: 0.8 },
+  scan:    { stops: ['--accent-2', '--accent', '--accent-3'],   speed: 1.1,  energy: 0.95 },
+  alert:   { stops: ['--danger', '--warn', '--danger'],         speed: 1.4,  energy: 1.05 },
+  success: { stops: ['--safe', '--accent-3', '--safe'],         speed: 0.55, energy: 0.85 },
 }
 
 const readVar = (name: string) =>
-  getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#8A5CFF'
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#6F8E78'
 
 /**
- * Low-res canvas of drifting light blobs, upscaled and blurred by CSS.
- * This is the app's ambient "trust field" — its colour tracks security state.
+ * Low-res canvas of drifting colour fields, upscaled and blurred by CSS.
+ * On a plaster ground these tint rather than glow: painting is source-over at
+ * low alpha, because 'lighter' on a light surface just blows out to white.
  */
 export function Aurora({ mood = 'calm', opacity = 1 }: { mood?: Mood; opacity?: number }) {
   const ref = useRef<HTMLCanvasElement>(null)
@@ -58,7 +59,6 @@ export function Aurora({ mood = 'calm', opacity = 1 }: { mood?: Mood; opacity?: 
 
       ctx.globalCompositeOperation = 'source-over'
       ctx.clearRect(0, 0, W, H)
-      ctx.globalCompositeOperation = 'lighter'
 
       for (const b of blobs) {
         const x = W * (0.5 + 0.42 * Math.sin(t * b.fx + b.px))
@@ -67,7 +67,7 @@ export function Aurora({ mood = 'calm', opacity = 1 }: { mood?: Mood; opacity?: 
         const g = ctx.createRadialGradient(x, y, 0, x, y, r)
         g.addColorStop(0, cur[b.i])
         g.addColorStop(1, 'transparent')
-        ctx.globalAlpha = 0.58
+        ctx.globalAlpha = 0.3
         ctx.fillStyle = g
         ctx.beginPath()
         ctx.arc(x, y, r, 0, Math.PI * 2)
@@ -89,8 +89,8 @@ export function Aurora({ mood = 'calm', opacity = 1 }: { mood?: Mood; opacity?: 
         inset: '-18%',
         width: '136%',
         height: '136%',
-        filter: 'blur(38px) saturate(150%)',
-        opacity: opacity * (mood === 'alert' ? 0.8 : 0.66),
+        filter: 'blur(42px)',
+        opacity: opacity * (mood === 'alert' ? 0.62 : 0.5),
         transition: 'opacity .7s ease',
         pointerEvents: 'none',
       }}

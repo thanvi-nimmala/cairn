@@ -17,8 +17,8 @@ export function DemoCursor({ pos, tapKey }: { pos: CursorPos | null; tapKey: num
       <div style={{ position: 'relative', transform: 'translate(-50%, -50%)' }}>
         <div style={{
           width: 22, height: 22, borderRadius: '50%',
-          border: '1.5px solid oklch(1 0 0 / .9)',
-          background: 'oklch(1 0 0 / .16)',
+          border: '1.5px solid rgba(26, 29, 26, .72)',
+          background: 'rgba(26, 29, 26, .12)',
           backdropFilter: 'blur(2px)',
           boxShadow: '0 2px 10px oklch(0 0 0 / .5)',
         }} />

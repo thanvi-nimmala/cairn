@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { FADE, POP, enter, step } from '../lib/motion'
 import { Icon } from '../components/Icon'
-import { RiskRadar } from '../components/RiskRadar'
 import { Avatar, Button, Card, Sheet } from '../components/ui'
 import { ACTIVITY, fmtMoney } from '../lib/data'
 
@@ -30,11 +30,11 @@ export function FraudReview({ onClose, onMood }: { onClose: () => void; onMood: 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, textAlign: 'center' }}>
           <motion.div
             initial={{ scale: 0.4, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 16 }}
+            transition={POP}
             style={{
               width: 92, height: 92, borderRadius: '50%', display: 'grid', placeItems: 'center',
-              background: `color-mix(in oklch, ${ok ? 'var(--safe)' : 'var(--accent-3)'} 16%, transparent)`,
-              border: `1px solid color-mix(in oklch, ${ok ? 'var(--safe)' : 'var(--accent-3)'} 45%, transparent)`,
+              background: `color-mix(in srgb, ${ok ? 'var(--safe)' : 'var(--accent-3)'} 16%, transparent)`,
+              border: `1px solid color-mix(in srgb, ${ok ? 'var(--safe)' : 'var(--accent-3)'} 45%, transparent)`,
               color: ok ? 'var(--safe)' : 'var(--accent-3)',
             }}
           >
@@ -46,7 +46,7 @@ export function FraudReview({ onClose, onMood }: { onClose: () => void; onMood: 
             </h2>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--text-dim)', marginTop: 10, maxWidth: 300, lineHeight: 1.5 }}>
               {ok
-                ? 'Payment sent. The model has folded GX Digital Goods into your trusted set — it won’t stop you there again.'
+                ? 'Payment sent. The model has folded DNH*LUMOSTORE LTD into your trusted set — it won’t stop you there again.'
                 : 'Your card is locked and a dispute is open. Unauthorized reports are reviewed within 24 hours, and you are not liable meanwhile.'}
             </p>
           </div>
@@ -61,44 +61,43 @@ export function FraudReview({ onClose, onMood }: { onClose: () => void; onMood: 
   return (
     <Sheet onClose={() => { onMood('calm'); onClose() }} title="Security review">
       <div style={{ padding: '2px 22px 0', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        <div style={{ textAlign: 'center', marginBottom: 6 }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 24, margin: 0, letterSpacing: '-0.035em' }}>
-            Did you make this payment?
+        <div style={{ marginBottom: 14 }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 32, margin: 0, letterSpacing: '-0.04em', lineHeight: 1.04 }}>
+            Held
           </h2>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 13.5, color: 'var(--text-dim)', marginTop: 7, lineHeight: 1.5 }}>
-            Held before it left your account. Here is everything the model saw.
-          </p>
-        </div>
-
-        {/* the shape of the suspicion */}
-        <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 2px', position: 'relative' }}>
-          <RiskRadar factors={factors} size={176} />
-          <div style={{
-            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', pointerEvents: 'none',
-          }}>
-            <div className="num" style={{ fontWeight: 700, fontSize: 26, color: 'var(--danger)', lineHeight: 1 }}>{confidence}%</div>
-            <div className="mono-label" style={{ fontSize: 8.5 }}>risk</div>
+          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 32, letterSpacing: '-0.04em', lineHeight: 1.04, color: 'var(--text-faint)' }}>
+            for review
           </div>
         </div>
 
-        <Card style={{ padding: 14, margin: '10px 0 14px', display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Avatar initials={t.initials} hue={t.hue} size={42} />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 15 }}>{t.party}</div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-faint)', marginTop: 2 }}>{t.when}</div>
+        {/* the stop itself, before any analysis of it */}
+        <Card
+          tone="danger"
+          style={{ padding: '16px 18px', marginBottom: 16 }}
+        >
+          <div style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 12.5, color: 'var(--danger)' }}>
+            Stopped before it left your account
           </div>
-          <div className="num" style={{ fontWeight: 700, fontSize: 19, color: 'var(--danger)' }}>{fmtMoney(t.amount)}</div>
+          <div className="num" style={{ fontSize: 38, lineHeight: 1.1, marginTop: 4, color: 'var(--text)' }}>
+            {fmtMoney(t.amount)}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginTop: 8 }}>
+            <Avatar initials={t.initials} hue={t.hue} size={26} />
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, color: 'var(--text-dim)', letterSpacing: '.04em' }}>
+              {t.party} · {t.when}
+            </div>
+          </div>
         </Card>
 
-        <div className="mono-label" style={{ marginBottom: 9, display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Icon name="sparkle" size={12} style={{ color: 'var(--accent)' }} /> signals, strongest first
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 2 }}>
+          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15 }}>Why it stopped</div>
+          <span className="mono-label">strongest first</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginBottom: 4 }}>
           {factors.map((f, i) => (
             <motion.div
               key={f.label}
-              initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 + i * 0.05 }}
+              initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ ...FADE, delay: 0.1 + step(i, 0.05) }}
               style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}
             >
               <span style={{
@@ -117,7 +116,7 @@ export function FraudReview({ onClose, onMood }: { onClose: () => void; onMood: 
                 <div style={{ height: 2.5, borderRadius: 2, background: 'var(--surface-2)', marginTop: 6, overflow: 'hidden' }}>
                   <motion.div
                     initial={{ width: 0 }} animate={{ width: `${f.weight * 100}%` }}
-                    transition={{ delay: 0.2 + i * 0.05, type: 'spring', stiffness: 120, damping: 22 }}
+                    transition={enter(0.2 + step(i, 0.05))}
                     style={{ height: '100%', background: LEVEL_COLOR[f.level], opacity: 0.8 }}
                   />
                 </div>
@@ -125,6 +124,14 @@ export function FraudReview({ onClose, onMood }: { onClose: () => void; onMood: 
             </motion.div>
           ))}
         </div>
+
+        <Card style={{ padding: '13px 18px', margin: '14px 0 4px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 14 }}>Overall risk</div>
+            <div className="mono-label" style={{ marginTop: 2 }}>{factors.length} of {factors.length} signals weighed</div>
+          </div>
+          <div className="num" style={{ fontSize: 34, lineHeight: 1, color: 'var(--danger)' }}>{confidence}%</div>
+        </Card>
 
         {/* the decision must always be reachable, however long the signal list runs */}
         <div style={{

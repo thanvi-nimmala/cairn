@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Martian+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>html,body{margin:0;background:#888}canvas{display:block;width:390px;height:844px}</style></head>
+<body><canvas id="c" width="780" height="1688"></canvas>
+<script type="module">
+import * as S from './cairn2.js';
+const {init}=S;
+await document.fonts.ready;
+await Promise.all([document.fonts.load('300 42px "Manrope"'),document.fonts.load('800 26px "Manrope"')]);
+init();
+const MAP={home:'HOME',sec:'SECURITY',rev:'REVIEW',act:'ACTIVITY',rcp:'RECIPIENT',
+  amt:'AMOUNT',scr:'SCREENING',cfm:'CONFIRM',suc:'SUCCESS',txn:'TXN',
+  crd:'CARDSCREEN',prf:'PROFILE',wel:'WELCOME',cal:'CALIBRATE',fid:'FACEID'};
+const q=new URLSearchParams(location.search).get('s')||'home';
+S[MAP[q]||'HOME'](document.getElementById('c').getContext('2d'));
+</script></body></html>

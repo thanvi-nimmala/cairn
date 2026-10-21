@@ -17,7 +17,7 @@ function Segmented<T extends string>({ value, options, onChange, id }: {
   return (
     <div style={{
       display: 'flex', gap: 2, padding: 3, borderRadius: 11,
-      background: 'oklch(0 0 0 / .28)', border: '1px solid var(--line-soft)',
+      background: 'rgba(26, 29, 26, 0.055)', border: '1px solid var(--stage-soft)',
     }}>
       {options.map((o) => {
         const on = value === o
@@ -26,11 +26,11 @@ function Segmented<T extends string>({ value, options, onChange, id }: {
             position: 'relative', flex: 1, border: 'none', background: 'none', cursor: 'pointer',
             padding: '6px 4px', borderRadius: 8,
             fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '.02em',
-            color: on ? 'var(--text)' : 'var(--text-faint)', transition: 'color .2s',
+            color: on ? 'var(--stage-text)' : 'var(--stage-faint)', transition: 'color .2s',
           }}>
             {on && (
               <motion.span layoutId={`seg-${id}`} transition={{ type: 'spring', stiffness: 520, damping: 40 }}
-                style={{ position: 'absolute', inset: 0, borderRadius: 8, background: 'oklch(1 0 0 / .09)' }} />
+                style={{ position: 'absolute', inset: 0, borderRadius: 8, background: '#FFFFFF', boxShadow: '0 1px 3px rgba(26,29,26,.12)' }} />
             )}
             <span style={{ position: 'relative' }}>{o}</span>
           </button>
@@ -60,7 +60,7 @@ export function TokensPanel({ theme, set, onReplay, onFraud }: Props) {
         <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, letterSpacing: '-0.02em' }}>
           Design controls
         </div>
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: 11.5, lineHeight: 1.5, color: 'var(--text-faint)', margin: '5px 0 0' }}>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: 11.5, lineHeight: 1.5, color: 'var(--stage-faint)', margin: '5px 0 0' }}>
           Every choice here writes a CSS custom property. Nothing is hard-coded downstream.
         </p>
       </div>
@@ -73,26 +73,26 @@ export function TokensPanel({ theme, set, onReplay, onFraud }: Props) {
               <button key={a.value} onClick={() => set('accent', a.value)} title={a.name} aria-label={a.name}
                 className="press" style={{
                   width: 32, height: 32, borderRadius: 10, cursor: 'pointer', flex: 1,
-                  background: a.value, border: `2px solid ${on ? 'var(--text)' : 'transparent'}`,
-                  boxShadow: on ? `0 0 16px ${a.value}` : 'inset 0 1px 0 oklch(1 0 0 / .25)',
+                  background: a.value, border: `2px solid ${on ? 'var(--stage-text)' : 'transparent'}`,
+                  boxShadow: on ? '0 2px 8px rgba(26, 29, 26, 0.18)' : 'none',
                   transition: 'box-shadow .25s, border-color .2s',
                 }} />
             )
           })}
         </div>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, color: 'var(--text-faint)', marginTop: 7 }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, color: 'var(--stage-faint)', marginTop: 7 }}>
           --accent: {theme.accent.toLowerCase()}
         </div>
       </Group>
 
       <Group label="Type">
-        <Segmented id="type" value={theme.fonts} options={['Editorial', 'Grotesk', 'Neutral'] as FontKey[]} onChange={(v) => set('fonts', v)} />
+        <Segmented id="type" value={theme.fonts} options={['Grotesk', 'Mono', 'Neutral'] as FontKey[]} onChange={(v) => set('fonts', v)} />
         <div style={{
           marginTop: 9, padding: '10px 12px', borderRadius: 10,
-          background: 'oklch(0 0 0 / .25)', border: '1px solid var(--line-soft)',
+          background: 'rgba(26, 29, 26, 0.05)', border: '1px solid var(--stage-soft)',
         }}>
           <div style={{ fontFamily: fp.display, fontWeight: 700, fontSize: 17, letterSpacing: '-0.02em' }}>$8,642.18</div>
-          <div style={{ fontFamily: fp.editorial, fontStyle: 'italic', fontSize: 16, color: 'var(--text-dim)', marginTop: 1 }}>
+          <div style={{ fontFamily: fp.editorial, fontStyle: 'italic', fontSize: 16, color: 'var(--stage-dim)', marginTop: 1 }}>
             watches
           </div>
         </div>
@@ -104,9 +104,9 @@ export function TokensPanel({ theme, set, onReplay, onFraud }: Props) {
           {[rd.card, rd.btn, rd.tile].map((r, i) => (
             <div key={i} style={{
               flex: 1, height: 30, borderRadius: r,
-              background: 'oklch(1 0 0 / .05)', border: '1px solid var(--line-soft)',
+              background: 'rgba(255, 255, 255, 0.72)', border: '1px solid var(--stage-soft)',
               display: 'grid', placeItems: 'center',
-              fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--text-faint)',
+              fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--stage-faint)',
             }}>{r}</div>
           ))}
         </div>
@@ -114,9 +114,9 @@ export function TokensPanel({ theme, set, onReplay, onFraud }: Props) {
 
       <Group label="AI presence">
         <Segmented id="ai" value={theme.aiLevel} options={['subtle', 'present', 'front'] as AiLevel[]} onChange={(v) => set('aiLevel', v)} />
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, lineHeight: 1.5, color: 'var(--text-faint)', margin: '8px 0 0' }}>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, lineHeight: 1.5, color: 'var(--stage-faint)', margin: '8px 0 0' }}>
           {theme.aiLevel === 'subtle'
-            ? 'Security recedes — a shield glyph and nothing more.'
+            ? 'Security recedes — the mark and nothing more.'
             : theme.aiLevel === 'present'
             ? 'A score you can glance at, and a strip of today’s verdicts.'
             : 'The model narrates: it tells you what it did before you ask.'}
@@ -134,12 +134,12 @@ export function TokensPanel({ theme, set, onReplay, onFraud }: Props) {
         </div>
       </Group>
 
-      <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: '1px solid var(--line-soft)' }}>
+      <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: '1px solid var(--stage-soft)' }}>
         <div className="mono-label" style={{ marginBottom: 6 }}>Palette</div>
         {([['safe', 'verified'], ['warn', 'watching'], ['danger', 'held']] as const).map(([t, l]) => (
           <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
             <span style={{ width: 10, height: 10, borderRadius: 3, background: `var(--${t})`, flexShrink: 0 }} />
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-faint)' }}>--{t} · {l}</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--stage-faint)' }}>--{t} · {l}</span>
           </div>
         ))}
       </div>
@@ -150,6 +150,6 @@ export function TokensPanel({ theme, set, onReplay, onFraud }: Props) {
 const demoBtn: React.CSSProperties = {
   display: 'flex', alignItems: 'center', gap: 8, width: '100%',
   padding: '9px 11px', borderRadius: 10, cursor: 'pointer',
-  background: 'oklch(1 0 0 / .05)', border: '1px solid var(--line-soft)',
-  fontFamily: 'var(--font-body)', fontSize: 12.5, fontWeight: 500, color: 'var(--text-dim)',
+  background: 'rgba(255, 255, 255, 0.72)', border: '1px solid var(--stage-soft)',
+  fontFamily: 'var(--font-body)', fontSize: 12.5, fontWeight: 500, color: 'var(--stage-dim)',
 }

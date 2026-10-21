@@ -1,0 +1,13 @@
+<!doctype html><html><head><meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Martian+Mono:wght@300;400;500;600;700&family=Archivo:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>html,body{margin:0;background:#888}canvas{display:block}</style></head>
+<body><canvas id="c" width="780" height="1688"></canvas>
+<script type="module">
+import {draw,init} from './redesign.js';
+const q=new URLSearchParams(location.search);
+await document.fonts.ready;
+await Promise.all([document.fonts.load('400 68px "Instrument Serif"'),
+  document.fonts.load('500 54px "JetBrains Mono"'),document.fonts.load('500 15px "Manrope"'),document.fonts.load('600 34px "Martian Mono"'),document.fonts.load('500 13px "Archivo"')]);
+init();
+draw(document.getElementById('c').getContext('2d'), q.get('r')||'r1');
+</script></body></html>

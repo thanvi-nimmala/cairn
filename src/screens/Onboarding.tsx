@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion'
+import { enter } from '../lib/motion'
 import { useEffect, useState } from 'react'
 import { Icon } from '../components/Icon'
 import { FaceScan } from '../components/FaceScan'
+import { CairnMark } from '../components/CairnMark'
 import { TrustBloom } from '../components/TrustBloom'
 import { Button, Screen } from '../components/ui'
 
@@ -14,24 +16,30 @@ export function Welcome({ onNext }: { onNext: () => void }) {
   ]
   return (
     <Screen pad={false} style={{ display: 'flex', flexDirection: 'column', padding: '0 28px' }}>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 28, paddingTop: 60 }}>
+      {/* the ground alone leaves this screen flat, because the copy sits in the
+          darkest band of the gradient. A local source lights the promise. */}
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background:
+            'radial-gradient(78% 42% at 24% 30%, var(--hero-glow), transparent 72%),' +
+            'radial-gradient(60% 34% at 88% 64%, var(--field-bloom), transparent 76%)',
+        }}
+      />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 28, paddingTop: 60, position: 'relative' }}>
         <motion.div
-          initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
+          initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={enter(0.05)}
           style={{ display: 'flex', alignItems: 'center', gap: 11 }}
         >
-          <div style={{
-            width: 44, height: 44, borderRadius: 14, background: 'var(--spectrum)',
-            display: 'grid', placeItems: 'center', boxShadow: '0 10px 30px var(--accent-glow)',
-          }}>
-            <Icon name="shield" size={24} stroke={2.2} style={{ color: '#fff' }} />
-          </div>
+          <CairnMark size={40} color="var(--text)" gap="var(--ink)" />
           <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 21, letterSpacing: '-0.02em' }}>
-            TruePay
+            Cairn
           </span>
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }}
+          initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={enter(0.14)}
           style={{
             fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 42, lineHeight: 1.02,
             letterSpacing: '-0.045em', margin: 0, textWrap: 'balance',
@@ -41,8 +49,7 @@ export function Welcome({ onNext }: { onNext: () => void }) {
           <span style={{
             fontFamily: 'var(--font-editorial)', fontStyle: 'italic', fontWeight: 400,
             fontSize: 46, letterSpacing: '-0.01em',
-            background: 'var(--spectrum)', WebkitBackgroundClip: 'text', backgroundClip: 'text',
-            color: 'transparent',
+            color: 'var(--accent)',
           }}>
             watches
           </span>{' '}
@@ -50,23 +57,25 @@ export function Welcome({ onNext }: { onNext: () => void }) {
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }}
-          style={{ fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.52, color: 'var(--text-dim)', margin: 0, maxWidth: 300 }}
+          initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={enter(0.22)}
+          style={{
+            fontFamily: 'var(--font-body)', fontSize: 16, lineHeight: 1.52,
+            color: 'color-mix(in srgb, var(--text) 82%, transparent)', margin: 0, maxWidth: 300,
+          }}
         >
           A security model reads every payment the moment you make it — and shows you
           exactly what it saw. No black box, no waiting on hold.
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={enter(0.3)}
           style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}
         >
           {chips.map(([ic, t]) => (
-            <span key={t} style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 12px',
-              borderRadius: 'var(--r-pill)', background: 'oklch(1 0 0 / .04)',
-              border: '1px solid var(--line)', color: 'var(--text-dim)',
-              fontFamily: 'var(--font-mono)', fontSize: 11, whiteSpace: 'nowrap',
+            <span key={t} className="glass-strong" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 13px',
+              borderRadius: 'var(--r-pill)', color: 'var(--text)',
+              fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 500, whiteSpace: 'nowrap',
             }}>
               <Icon name={ic} size={13} style={{ color: 'var(--accent)' }} />{t}
             </span>
@@ -75,7 +84,7 @@ export function Welcome({ onNext }: { onNext: () => void }) {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.38 }}
+        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={enter(0.38)}
         style={{ display: 'flex', flexDirection: 'column', gap: 10, paddingBottom: 42 }}
       >
         <Button icon="arrowUR" demo="welcome-cta" onClick={onNext}>Create a secure account</Button>
@@ -107,7 +116,7 @@ export function Calibrate({ onDone }: { onDone: () => void }) {
         <TrustBloom score={Math.round((step / CALIB.length) * 96)} size={168} label={false} animate={false} agitation={step < CALIB.length ? 0.5 : 0} />
         <div style={{ textAlign: 'center' }}>
           <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 25, margin: 0, letterSpacing: '-0.03em' }}>
-            Building your shield
+            Setting your stones
           </h2>
           <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-faint)', marginTop: 8, letterSpacing: '.04em', whiteSpace: 'nowrap' }}>
             one-time setup · nothing leaves this device
@@ -123,8 +132,8 @@ export function Calibrate({ onDone }: { onDone: () => void }) {
               }}>
                 <span style={{
                   width: 22, height: 22, borderRadius: '50%', display: 'grid', placeItems: 'center', flexShrink: 0,
-                  background: on ? 'color-mix(in oklch, var(--safe) 18%, transparent)' : 'transparent',
-                  border: `1px solid ${on ? 'color-mix(in oklch, var(--safe) 45%, transparent)' : 'var(--line)'}`,
+                  background: on ? 'color-mix(in srgb, var(--safe) 18%, transparent)' : 'transparent',
+                  border: `1px solid ${on ? 'color-mix(in srgb, var(--safe) 45%, transparent)' : 'var(--line)'}`,
                   color: 'var(--safe)', transition: 'all .4s',
                 }}>
                   {on ? <Icon name="check" size={12} stroke={3} /> :

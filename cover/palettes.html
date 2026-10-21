@@ -1,0 +1,10 @@
+<!doctype html><html><head><meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@300;400;500;600;700&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>html,body{margin:0;background:#fff}canvas{display:block}</style></head>
+<body><canvas id="c" width="1840" height="2720"></canvas>
+<script type="module">
+import {draw,init} from './palettes.js';
+await document.fonts.ready;
+await Promise.all([document.fonts.load('600 22px "Martian Mono"'),document.fonts.load('500 12px "Archivo"')]);
+init();draw(document.getElementById('c').getContext('2d'));
+</script></body></html>

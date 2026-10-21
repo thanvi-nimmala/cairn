@@ -1,23 +1,42 @@
 import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import { SETTLE, drift, step } from '../lib/motion'
+import { stonePath, STONES } from '../lib/stone'
 
 interface Props {
   score: number
   size?: number
   label?: boolean
   animate?: boolean
-  /** 0–1 turbulence: rises when the AI is uneasy, making the bloom ragged */
+  /** 0–1 unease: the crown stone lifts and tilts, as if the stack were settling */
   agitation?: number
+  /** how many stones are set. Defaults to deriving from the score, but the two
+      are different facts — six protections, a hundred points — so callers that
+      know the real armed count should pass it. */
+  set?: number
+  /** how many stones the stack can hold at all. */
+  total?: number
+  /** inverts the separator and the unset outlines for a dark ground. */
+  dark?: boolean
 }
 
-const TICKS = 72
+/* Cut from whatever rock the scheme is made of — applyTheme interpolates
+   both ramps, so a clay or plum ground never gets a sage cairn. */
+const TONE = [1, 2, 3, 4, 5, 6].map((i) => `var(--stone-${i})`)
+/* on the scanner field the ramp inverts: the base has to stay off the black */
+const TONE_DARK = [1, 2, 3, 4, 5, 6].map((i) => `var(--stone-d${i})`)
 
 /**
- * The app's signature score visual: a radial bloom of ticks whose lengths ride a
- * standing wave. Lit ticks encode the trust score; agitation roughens the wave.
+ * The app's score visual: a cairn. Each stone is one protection that is set,
+ * so the stack height *is* the score — six stones is the full six. Agitation
+ * unsettles the crown rather than roughening everything, because an unsteady
+ * cairn is legible in a way a ragged wave is not.
  */
-export function TrustBloom({ score, size = 150, label = true, animate = true, agitation = 0 }: Props) {
+export function TrustBloom({
+  score, size = 150, label = true, animate = true, agitation = 0,
+  set: setProp, total: totalProp, dark = false,
+}: Props) {
   const [shown, setShown] = useState(animate ? 0 : score)
-  const [phase, setPhase] = useState(0)
   const raf = useRef(0)
 
   useEffect(() => {
@@ -34,82 +53,72 @@ export function TrustBloom({ score, size = 150, label = true, animate = true, ag
     return () => cancelAnimationFrame(raf.current)
   }, [score, animate])
 
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    let id = 0
-    const tick = () => { setPhase((p) => p + 0.016); id = requestAnimationFrame(tick) }
-    id = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(id)
-  }, [])
+  const total = Math.max(1, Math.min(STONES.length, totalProp ?? STONES.length))
+  const rows = STONES.slice(0, total)
+  const set = Math.max(0, Math.min(total,
+    setProp ?? Math.round((shown / 100) * total)))
 
-  const cx = size / 2
-  const cy = size / 2
-  const rIn = size * 0.315
-  const litCount = Math.round((shown / 100) * TICKS)
-
-  const ticks = Array.from({ length: TICKS }, (_, i) => {
-    const a = (i / TICKS) * Math.PI * 2 - Math.PI / 2
-    const lit = i < litCount
-    // standing wave + agitation-driven second harmonic
-    const wave = Math.sin(i * 0.55 + phase * 1.6) * 0.5 + 0.5
-    const rough = agitation * (Math.sin(i * 2.7 + phase * 5.2) * 0.5 + 0.5)
-    const len = lit ? size * (0.055 + 0.055 * wave + 0.05 * rough) : size * 0.022
-    const r2 = rIn + len
-    return {
-      x1: cx + Math.cos(a) * rIn, y1: cy + Math.sin(a) * rIn,
-      x2: cx + Math.cos(a) * r2,  y2: cy + Math.sin(a) * r2,
-      lit, o: lit ? 0.55 + 0.45 * wave : 0.28,
-    }
+  // lay the stack out bottom-up, tracking bounds so the viewBox fits exactly
+  let y = 0, minY = 0, maxY = 0, maxX = 0
+  const laid = rows.map((s, i) => {
+    const rx = s.w * size, ry = s.h * size
+    y -= ry * 1.74
+    const extX = Math.abs(rx * Math.cos(s.rot)) + Math.abs(ry * Math.sin(s.rot))
+    const extY = Math.abs(rx * Math.sin(s.rot)) + Math.abs(ry * Math.cos(s.rot))
+    minY = Math.min(minY, y - extY); maxY = Math.max(maxY, y + extY)
+    maxX = Math.max(maxX, Math.abs(s.dx * size) + extX)
+    const o = { ...s, rx, ry, y, i }
+    y -= ry * 0.26
+    return o
   })
-
-  const uid = `bloom${size}`
+  const PAD = 5
+  const vw = (maxX + PAD) * 2, vh = maxY - minY + PAD * 2
 
   return (
-    <div style={{ width: size, height: size, position: 'relative' }}>
-      <svg width={size} height={size} style={{ display: 'block', overflow: 'visible' }}>
-        <defs>
-          <linearGradient id={uid} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="var(--accent-3)" />
-            <stop offset="52%" stopColor="var(--accent)" />
-            <stop offset="100%" stopColor="var(--accent-2)" />
-          </linearGradient>
-          <filter id={`${uid}g`} x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation={size * 0.028} result="b" />
-            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-        </defs>
-
-        {/* inner hairline */}
-        <circle cx={cx} cy={cy} r={rIn - size * 0.035} fill="none" stroke="var(--line)" strokeWidth={1} opacity={0.65} />
-
-        <g filter={`url(#${uid}g)`}>
-          {ticks.map((t, i) => (
-            <line
-              key={i}
-              x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2}
-              stroke={t.lit ? `url(#${uid})` : 'var(--surface-3)'}
-              strokeWidth={size * 0.019}
-              strokeLinecap="round"
-              opacity={t.o}
-            />
-          ))}
-        </g>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+      <svg
+        viewBox={`${-vw / 2} ${minY - PAD} ${vw} ${vh}`}
+        width={vw} height={vh}
+        role="img" aria-label={`Trust score ${shown} of 100, ${set} of ${total} stones set`}
+      >
+        {laid.map((s) => {
+          const isCrown = s.i === set - 1
+          const wobble = isCrown ? agitation : 0
+          return (
+            <g key={s.i} transform={`translate(${s.dx * size},${s.y})`}>
+              <motion.g
+                animate={{
+                  y: -wobble * size * 0.045,
+                  rotate: (s.rot * 180) / Math.PI + wobble * 7,
+                }}
+                transition={wobble ? drift(1.5) : { ...SETTLE, delay: step(s.i, 0.05) }}
+                style={{ transformOrigin: '0px 0px' }}
+              >
+                {s.i < set ? (
+                  <path
+                    d={stonePath(s.seed, s.rx, s.ry)}
+                    fill={(dark ? TONE_DARK : TONE)[s.i] ?? (dark ? TONE_DARK : TONE)[5]}
+                    stroke={dark ? 'var(--scan-core)' : 'var(--ink)'}
+                    strokeWidth={Math.max(1, size * 0.023)} paintOrder="stroke fill"
+                  />
+                ) : (
+                  <path
+                    d={stonePath(s.seed, s.rx, s.ry)}
+                    fill="none" stroke={dark ? '#FFFFFF' : 'var(--text-faint)'}
+                    strokeOpacity={dark ? 0.42 : 0.55}
+                    strokeWidth={Math.max(1, size * 0.009)}
+                    strokeDasharray={`${size * 0.02} ${size * 0.027}`}
+                  />
+                )}
+              </motion.g>
+            </g>
+          )
+        })}
       </svg>
-
       {label && (
-        <div style={{
-          position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center', gap: 2,
-        }}>
-          <div className="num" style={{ fontWeight: 700, fontSize: size * 0.255, lineHeight: 1, color: 'var(--text)' }}>
-            {shown}
-          </div>
-          <div style={{
-            fontFamily: 'var(--font-mono)', fontSize: Math.max(8, size * 0.062),
-            color: 'var(--text-faint)', letterSpacing: '.18em', textTransform: 'uppercase',
-          }}>
-            trust
-          </div>
+        <div style={{ textAlign: 'center' }}>
+          <div className="num" style={{ fontSize: size * 0.3, lineHeight: 1, color: 'var(--text)' }}>{shown}</div>
+          <div className="mono-label" style={{ marginTop: 5 }}>{set} of {total} set</div>
         </div>
       )}
     </div>

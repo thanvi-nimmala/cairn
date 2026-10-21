@@ -12,23 +12,26 @@ export function TxnDetail({ txn, onClose, onFraud }: { txn: Txn; onClose: () => 
     ['Category', txn.cat],
     ['Payment method', txn.method],
     ['Note', txn.note || '—'],
-    ['Reference', `TP-${txn.id.toUpperCase()}-2041`],
+    ['Reference', `CN-${txn.id.toUpperCase()}-2041`],
   ]
 
   return (
     <Sheet onClose={onClose} title="Transaction">
       <div style={{ padding: '2px 22px 26px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 12, marginBottom: 18 }}>
-          <Avatar initials={txn.initials} hue={txn.hue} size={60} biz={txn.biz} />
-          <div>
-            <div className="num" style={{
-              fontWeight: 700, fontSize: 34, letterSpacing: '-0.045em',
-              color: inbound ? 'var(--safe)' : 'var(--text)',
-            }}>
-              {fmtMoney(inbound ? txn.amount : -txn.amount, { sign: true })}
-            </div>
-            <div style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--text-dim)', marginTop: 3 }}>
-              {inbound ? 'from' : 'to'} {txn.party}
+        {/* the amount is the screen — the party rides underneath it */}
+        <div style={{ marginBottom: 26 }}>
+          <div className="mono-label" style={{ marginBottom: 8 }}>{inbound ? 'Received' : 'Sent'}</div>
+          <div className="num" style={{
+            fontSize: 62, lineHeight: 1, letterSpacing: '-0.05em',
+            color: inbound ? 'var(--safe)' : 'var(--text)',
+          }}>
+            {fmtMoney(inbound ? txn.amount : -txn.amount, { sign: true })}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
+            <Avatar initials={txn.initials} hue={txn.hue} size={34} biz={txn.biz} />
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14 }}>{txn.party}</div>
+              <div className="mono-label" style={{ marginTop: 2 }}>{txn.when}</div>
             </div>
           </div>
         </div>
@@ -36,20 +39,20 @@ export function TxnDetail({ txn, onClose, onFraud }: { txn: Txn; onClose: () => 
         <Card tone={watched ? undefined : 'safe'} style={{
           padding: 13, marginBottom: 14, display: 'flex', gap: 11, alignItems: 'center',
           ...(watched ? {
-            background: 'color-mix(in oklch, var(--warn) 10%, var(--surface))',
-            borderColor: 'color-mix(in oklch, var(--warn) 32%, var(--line))',
+            background: 'color-mix(in srgb, var(--warn) 10%, var(--surface))',
+            borderColor: 'color-mix(in srgb, var(--warn) 32%, var(--line))',
           } : {}),
         }}>
           <span style={{
             width: 34, height: 34, borderRadius: 11, display: 'grid', placeItems: 'center', flexShrink: 0,
-            background: `color-mix(in oklch, var(--${watched ? 'warn' : 'safe'}) 18%, transparent)`,
+            background: `color-mix(in srgb, var(--${watched ? 'warn' : 'safe'}) 18%, transparent)`,
             color: `var(--${watched ? 'warn' : 'safe'})`,
           }}>
             <Icon name={watched ? 'eye' : 'shield'} size={19} />
           </span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 13 }}>
-              {watched ? 'Recurring — kept under watch' : 'Verified by TruePay AI'}
+              {watched ? 'Recurring — kept under watch' : 'Verified by Cairn'}
             </div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--text-dim)', marginTop: 1 }}>
               {watched ? 'renews monthly · cancel anytime' : 'encrypted · tokenized · biometric-approved'}

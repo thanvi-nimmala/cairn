@@ -9,7 +9,7 @@ export interface Contact {
   hue: number
   verified: boolean
   biz?: boolean
-  /** how long TruePay has known this account — feeds the trust readout */
+  /** how long Cairn has known this account — feeds the trust readout */
   known?: string
 }
 

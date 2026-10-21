@@ -1,0 +1,57 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8" />
+<title>Cairn — feature cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Martian+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./style.css" />
+</head><body>
+<div class="grid">
+
+  <!-- the workload: what the product does all day -->
+  <article class="card wide" style="--lx:72%; --ly:14%">
+    <div class="title">Screened today</div>
+    <div class="fig"><span class="dot">34</span><span class="unit">read</span></div>
+    <div class="foot">Every payment, before it moves</div>
+    <div class="art" data-art="strip"></div>
+  </article>
+
+  <!-- the instrument, and the thing inside it -->
+  <article class="card" style="--lx:80%; --ly:46%; --lit:rgba(110,146,184,.34)">
+    <div class="title">The scanner</div>
+    <div class="fig"><span class="dot sm good">4</span><span class="unit">checks</span></div>
+    <div class="legend" style="margin-bottom:14px">
+      <div class="on"><b></b>Recipient · amount · device · origin</div>
+    </div>
+    <div class="foot">Read in 2.1 seconds</div>
+    <div class="art" data-art="scanner:56"></div>
+  </article>
+
+  <!-- the identity -->
+  <article class="card" style="--lx:84%; --ly:24%">
+    <div class="title">Trust</div>
+    <div class="fig"><span class="dot sm">96</span><span class="unit">/100</span></div>
+    <div class="legend" style="margin-bottom:14px">
+      <div class="on"><b></b>Biometric approval</div>
+      <div class="on"><b></b>Device &amp; location trusted</div>
+      <div><b></b>Travel mode</div>
+    </div>
+    <div class="foot">Five of six stones set</div>
+    <div class="art" data-art="cairn:74"></div>
+  </article>
+
+  <!-- the payoff -->
+  <article class="card" style="--lx:76%; --ly:20%; --lit:rgba(229,128,111,.30)">
+    <div class="title">Held for review</div>
+    <div class="fig"><span class="dot sm alarm">482</span><span class="unit">USD</span></div>
+    <div style="margin-bottom:14px">
+      <div class="rail"><i style="width:58%"></i><span class="mark" style="left:calc(58% - 5px)"></span></div>
+      <div class="ends"><span>LOW RISK</span><span>HIGH</span></div>
+    </div>
+    <div class="foot">Stopped before it left the account</div>
+    <div class="art" data-art="bars"></div>
+  </article>
+
+</div>
+<script src="./art.js"></script>
+</body></html>

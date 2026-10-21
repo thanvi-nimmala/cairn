@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Icon } from '../components/Icon'
 import { TrustBloom } from '../components/TrustBloom'
-import { Card, Screen, SectionLabel, Switch } from '../components/ui'
+import { Card, SectionLabel, Switch } from '../components/ui'
+import { AreaChart, HeroField, HeroMetric } from '../components/field'
 import { CONSOLE_LINES, MONITORING, PROTECTIONS } from '../lib/data'
 
 const TONE: Record<string, string> = { safe: 'var(--safe)', warn: 'var(--warn)', danger: 'var(--danger)' }
@@ -15,16 +16,15 @@ function Console() {
     return () => clearInterval(id)
   }, [])
   return (
-    <div style={{
+    <div className="glass" style={{
       display: 'flex', alignItems: 'center', gap: 9, height: 34, padding: '0 12px',
-      borderRadius: 'var(--r-pill)', background: 'oklch(0 0 0 / .32)',
-      border: '1px solid var(--line-soft)', overflow: 'hidden',
+      borderRadius: 'var(--r-pill)', overflow: 'hidden',
     }}>
       <span className="blink" style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--safe)', flexShrink: 0 }} />
       <motion.span
         key={i}
         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
-        style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--text-dim)', whiteSpace: 'nowrap' }}
+        style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, color: 'var(--text-dim)', whiteSpace: 'nowrap' }}
       >
         {CONSOLE_LINES[i]}
       </motion.span>
@@ -44,62 +44,66 @@ export function Security({ onFraud }: { onFraud: () => void }) {
   const agitation = 1 - score / 100
 
   return (
-    <Screen>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 30, margin: '0 0 4px', letterSpacing: '-0.04em' }}>
-        Security
-      </h1>
-      <p style={{ fontFamily: 'var(--font-body)', fontSize: 13.5, color: 'var(--text-dim)', margin: '0 0 20px' }}>
-        Turn a protection off and watch the score answer.
-      </p>
+    <HeroField>
+      <div style={{ padding: '74px 0 120px' }}>
+        {/* the figure is the screen, not a widget on it */}
+        <div style={{ padding: '0 22px' }}>
+          <HeroMetric
+            label={`Trust · ${armed} of ${PROTECTIONS.length} set`}
+            value={score}
+            sub={score > 80 ? 'Protected · monitoring' : score > 50 ? 'Reduced cover' : 'Exposed'}
+          />
+        </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-        <TrustBloom score={score} size={168} agitation={agitation} />
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 7, padding: '6px 13px',
-          borderRadius: 'var(--r-pill)',
-          background: `color-mix(in oklch, ${score > 80 ? 'var(--safe)' : score > 50 ? 'var(--warn)' : 'var(--danger)'} 13%, transparent)`,
-          border: `1px solid color-mix(in oklch, ${score > 80 ? 'var(--safe)' : score > 50 ? 'var(--warn)' : 'var(--danger)'} 34%, transparent)`,
-        }}>
-          <span className="blink" style={{
-            width: 6, height: 6, borderRadius: '50%',
-            background: score > 80 ? 'var(--safe)' : score > 50 ? 'var(--warn)' : 'var(--danger)',
-          }} />
+        {/* the stack reads the same number a second way */}
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '18px 0 2px' }}>
+          <TrustBloom score={score} size={112} agitation={agitation} set={armed} label={false} />
+        </div>
+
+        {/* four weeks, flagged where someone changed something */}
+        <div style={{ marginTop: 10 }}>
+          <AreaChart
+            series={[34, 38, 36, 52, 46, 61, 58, 74, 69, 96, 88, 96]}
+            flags={[{ at: 3 }, { at: 7 }]}
+            selected={9}
+            xLabels={['wk 1', 'wk 2', 'wk 3', 'wk 4']}
+            height={176}
+          />
+        </div>
+
+        <div style={{ padding: '0 22px', marginTop: 18 }}>
+          <Console />
+        </div>
+
+        {/* review callout */}
+        <div style={{ padding: '0 22px' }}>
+        <motion.div
+          className="press" onClick={onFraud}
+          whileTap={{ scale: 0.98 }}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 12, padding: '13px 14px',
+            borderRadius: 'var(--r-card)', margin: '16px 0 0', cursor: 'pointer',
+            background: 'color-mix(in srgb, var(--danger) 12%, var(--surface))',
+            border: '1px solid color-mix(in srgb, var(--danger) 38%, transparent)',
+          }}
+        >
           <span style={{
-            fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase',
-            color: score > 80 ? 'var(--safe)' : score > 50 ? 'var(--warn)' : 'var(--danger)',
+            width: 34, height: 34, borderRadius: 11, display: 'grid', placeItems: 'center', flexShrink: 0,
+            background: 'color-mix(in srgb, var(--danger) 20%, transparent)', color: 'var(--danger)',
           }}>
-            {score > 80 ? 'protected · monitoring' : score > 50 ? 'reduced cover' : 'exposed'}
+            <Icon name="alert" size={18} />
           </span>
-        </div>
-        <div style={{ width: '100%', marginTop: 4 }}><Console /></div>
-      </div>
-
-      {/* review callout */}
-      <motion.div
-        className="press" onClick={onFraud}
-        whileTap={{ scale: 0.98 }}
-        style={{
-          display: 'flex', alignItems: 'center', gap: 12, padding: '13px 14px',
-          borderRadius: 'var(--r-card)', margin: '20px 0 0', cursor: 'pointer',
-          background: 'color-mix(in oklch, var(--danger) 12%, var(--surface))',
-          border: '1px solid color-mix(in oklch, var(--danger) 38%, transparent)',
-        }}
-      >
-        <span style={{
-          width: 34, height: 34, borderRadius: 11, display: 'grid', placeItems: 'center', flexShrink: 0,
-          background: 'color-mix(in oklch, var(--danger) 20%, transparent)', color: 'var(--danger)',
-        }}>
-          <Icon name="alert" size={18} />
-        </span>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 13.5 }}>1 item needs your review</div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--text-dim)', marginTop: 2 }}>
-            a held payment is waiting on you
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 13.5 }}>1 item needs your review</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9.5, color: 'var(--text-dim)', marginTop: 2 }}>
+              a held payment is waiting on you
+            </div>
           </div>
+          <Icon name="chevR" size={17} style={{ color: 'var(--danger)' }} />
+        </motion.div>
         </div>
-        <Icon name="chevR" size={17} style={{ color: 'var(--danger)' }} />
-      </motion.div>
 
+        <div style={{ padding: '0 22px' }}>
       <SectionLabel right={<span className="mono-label" style={{ color: 'var(--text-dim)' }}>{armed}/{PROTECTIONS.length} armed</span>}>
         Protections
       </SectionLabel>
@@ -124,7 +128,7 @@ export function Security({ onFraud }: { onFraud: () => void }) {
                   {p.locked && <Icon name="lock" size={11} style={{ color: 'var(--text-faint)' }} />}
                   <span style={{
                     fontFamily: 'var(--font-mono)', fontSize: 9.5, color: 'var(--text-faint)',
-                    padding: '1px 5px', borderRadius: 4, background: 'oklch(1 0 0 / .05)',
+                    padding: '1px 5px', borderRadius: 4, background: 'var(--chip)',
                   }}>+{p.weight}</span>
                 </div>
                 <div style={{ fontFamily: 'var(--font-body)', fontSize: 11.5, color: 'var(--text-dim)', marginTop: 1 }}>{p.detail}</div>
@@ -146,7 +150,7 @@ export function Security({ onFraud }: { onFraud: () => void }) {
           }}>
             <span style={{
               width: 30, height: 30, borderRadius: '50%', flexShrink: 0, display: 'grid', placeItems: 'center',
-              background: `color-mix(in oklch, ${TONE[m.tone]} 13%, transparent)`, color: TONE[m.tone],
+              background: `color-mix(in srgb, ${TONE[m.tone]} 13%, transparent)`, color: TONE[m.tone],
             }}>
               <Icon name={m.icon} size={16} />
             </span>
@@ -158,6 +162,8 @@ export function Security({ onFraud }: { onFraud: () => void }) {
           </div>
         ))}
       </Card>
-    </Screen>
+        </div>
+      </div>
+    </HeroField>
   )
 }

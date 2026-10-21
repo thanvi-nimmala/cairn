@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8" /><style>body{margin:0;background:#EFF0EC}
+canvas{margin:8px}</style></head><body>
+<script type="module">
+import {renderStone} from './stonegen.js';
+/* proportions match the stack: widest at the base, smallest on top */
+const SPEC=[[560,250,3],[420,232,17],[480,214,29],[340,228,41],[390,196,53],[250,168,67]];
+const TINT=[172,182,172];
+for(let i=0;i<SPEC.length;i++){
+  const [w,h,seed]=SPEC[i];
+  const cv=renderStone(w,h,seed,TINT);
+  document.body.appendChild(cv);
+  const blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+  await fetch('/__frame/stone-'+i,{method:'POST',body:blob});
+}
+await fetch('/__done',{method:'POST'});
+document.title='done';
+</script></body></html>

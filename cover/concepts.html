@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/src/index.css" />
+<style>html,body{margin:0;height:auto;overflow:visible;background:#fff;display:grid;place-items:start center}
+canvas{width:520px;height:796px;display:block}</style></head>
+<body><canvas id="c" width="1040" height="1592"></canvas>
+<script type="module">
+import {draw,readTokens} from './concepts.js';
+const q=new URLSearchParams(location.search);
+await document.fonts.ready;
+await Promise.all([document.fonts.load('700 68px "Bricolage Grotesque"'),
+  document.fonts.load('500 14px "JetBrains Mono"'),document.fonts.load('500 16px "Manrope"')]);
+readTokens();
+draw(document.getElementById('c').getContext('2d'), q.get('c')||'a');
+</script></body></html>
