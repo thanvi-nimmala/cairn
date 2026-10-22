@@ -15,11 +15,8 @@ import { PayFlow } from './screens/PayFlow'
 import { FraudReview } from './screens/FraudReview'
 import { TxnDetail } from './screens/TxnDetail'
 
-import { DemoBar } from './stage/DemoBar'
 import { DemoCursor } from './demo/DemoCursor'
 import { useDemoRunner } from './demo/useDemoRunner'
-import { SceneRail } from './stage/SceneRail'
-import { TokensPanel } from './stage/TokensPanel'
 import { SCENES, type SceneId } from './stage/scenes'
 
 import { ACTIVITY } from './lib/data'
@@ -54,7 +51,6 @@ export default function App() {
   const [mood, setMood] = useState<Mood>('calm')
   const [balanceHidden, setBalanceHidden] = useState(false)
   const [mode, setMode] = useState<'personal' | 'business'>('personal')
-  const [recording, setRecording] = useState(false)
 
   const set = useCallback(<K extends keyof Theme>(k: K, v: Theme[K]) => setTheme((t) => ({ ...t, [k]: v })), [])
 
@@ -136,7 +132,6 @@ export default function App() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return
-      if (e.key.toLowerCase() === 'c') { setRecording((v) => !v); return }
       if (e.key === 'Escape' && demo.activeId) { demo.stop(); return }
       if (demo.activeId) return   // a reel is driving; keep hands off
       const i = SCENES.findIndex((s) => s.id === scene)
@@ -186,7 +181,6 @@ export default function App() {
     )
   }
 
-  const activeScene = SCENES.find((s) => s.id === scene)
 
   if (SHOT || DEVICE) {
     const [name, variant] = (SHOT || DEVICE || '').split(':')
@@ -253,24 +247,13 @@ export default function App() {
 
       <div
         ref={stageRef}
-        className={`stage${recording || REEL ? ' recording' : ''}`}
+        className="stage"
         style={{ position: 'relative', height: '100%', display: 'flex' }}
       >
-        <div className="rail"><SceneRail active={scene} onPick={goto} /></div>
-
         <main ref={mainRef} style={{
           flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center', gap: 18, padding: '20px 12px',
         }}>
-          {!recording && !REEL && (
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 17, letterSpacing: '-0.02em' }}>
-                {activeScene?.label}
-              </div>
-              <div className="mono-label" style={{ marginTop: 2 }}>{activeScene?.note}</div>
-            </div>
-          )}
-
           <div className="phone-wrap">
             <div className="phone-scaler">
             <PhoneFrame mood={mood} cutout={!!REEL}>
@@ -308,19 +291,8 @@ export default function App() {
             </span>
           </div>
         </main>
-
-        <div className="panel"><TokensPanel theme={theme} set={set} onReplay={() => goto('welcome')} onFraud={() => goto('held')} /></div>
       </div>
 
-      <DemoBar
-        reels={demo.reels}
-        activeId={demo.activeId}
-        progress={demo.progress}
-        recording={recording}
-        onPlay={demo.play}
-        onStop={demo.stop}
-        onToggleRecording={() => setRecording((v) => !v)}
-      />
       <DemoCursor pos={demo.cursor} tapKey={demo.tapKey} />
     </div>
   )

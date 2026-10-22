@@ -261,10 +261,6 @@ html[data-still] *, html[data-still] *::before, html[data-still] *::after {
 @media (max-width: 1180px) { .panel { display: none; } }
 @media (max-width: 900px)  { .rail  { display: none; } }
 
-/* ═══ record mode ════════════════════════════════════════════ */
-/* strips the stage back to the device so a screen capture is clean */
-.stage.recording .rail,
-.stage.recording .panel { display: none; }
 
 /* while a reel plays the picker gets out of the frame; hovering brings it back */
 .demo-bar[data-playing='true'] {
