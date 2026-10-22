@@ -27,7 +27,7 @@ const TONE      =['#4E5A69','#636F7D','#788491','#8C98A6','#A1ADBA','#B6C2CE'];
 const TONE_DARK =['#CFD7DF','#C0C8D0','#B1B9C2','#A1AAB3','#929BA5','#838C96'];
 const INK='#1B212A', SCAN_CORE='#020306', FAINT='#76838F';
 
-function cairn(size, set, dark){
+function stack(size, set, dark){
   const tone = dark ? TONE_DARK : TONE, gap = dark ? SCAN_CORE : INK;
   let y=0,minY=0,maxY=0,maxX=0;
   const laid=STONES.map(([w,h,rot,dx,seed],i)=>{
@@ -57,7 +57,7 @@ function scanner(R){
     t+=`<line x1="${(Math.cos(a)*R).toFixed(1)}" y1="${(Math.sin(a)*R).toFixed(1)}" x2="${(Math.cos(a)*(R+len)).toFixed(1)}" y2="${(Math.sin(a)*(R+len)).toFixed(1)}" stroke="rgba(226,240,246,0.88)" stroke-width="1.4"/>`;
   }
   const inner=`<ellipse rx="${(R*0.7).toFixed(1)}" ry="${(R*0.7).toFixed(1)}" fill="none" stroke="rgba(226,240,246,0.42)" stroke-width="1" stroke-dasharray="1 7"/>`;
-  const c=cairn(R*0.78, 3, true);
+  const c=stack(R*0.78, 3, true);
   const S=Math.round(R*1.22);
   return `<svg width="${S*2}" height="${S*2}" viewBox="${-S} ${-S} ${S*2} ${S*2}">
     <g transform="scale(1,1.07)">${t}${inner}</g>
@@ -96,10 +96,102 @@ function strip(){
   return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${b}</svg>`;
 }
 
+/** The mark building itself, bottom stone first, then leaving top-first.
+
+    One shared keyframe plus a per-stone animation-delay cannot do this: the
+    delay shifts the whole cycle, so the stone that enters first also leaves
+    first and is back before the crown has gone. Each stone therefore gets its
+    own keyframes, with the entry and the exit timed independently against one
+    shared period.
+
+    Each stone needs TWO groups as well: an outer one carrying its position and
+    an inner one carrying the movement. A CSS transform on an SVG element
+    replaces that element's transform attribute rather than composing with it,
+    so animating the positioned group collapses the stack onto one point. */
+let MARK_N = 0;
+function mark(size, T){
+  const uid = 'mk' + (MARK_N++);
+  T = T || 6.0;               // one full period
+  const IN_STEP = 0.26;       // bottom to crown, building
+  const FALL = 0.40;
+  const HOLD_END = 4.10;
+  const OUT_STEP = 0.09;      // crown to bottom, leaving
+  const RISE = 0.46;
+
+  let y=0,minY=0,maxY=0,maxX=0;
+  const laid=STONES.map(([w,h,rot,dx,seed],i)=>{
+    const rx=w*size, ry=h*size; y-=ry*1.74;
+    const eX=Math.abs(rx*Math.cos(rot))+Math.abs(ry*Math.sin(rot));
+    const eY=Math.abs(rx*Math.sin(rot))+Math.abs(ry*Math.cos(rot));
+    minY=Math.min(minY,y-eY); maxY=Math.max(maxY,y+eY);
+    maxX=Math.max(maxX,Math.abs(dx*size)+eX);
+    const o={rx,ry,rot,dx,seed,y,i}; y-=ry*0.26; return o;
+  });
+  const P=6, vw=(maxX+P)*2, vh=maxY-minY+P*2;
+  const top = STONES.length - 1;
+  const pc = t => ((t / T) * 100).toFixed(2);
+
+  const frames = laid.map(s=>{
+    const inA = s.i * IN_STEP, inB = inA + FALL;
+    // the crown leads the exit and the rest follow it up
+    const outA = HOLD_END + (top - s.i) * OUT_STEP, outB = outA + RISE;
+    return `@keyframes ${uid}-${s.i}{
+      0%,${pc(inA)}%{transform:translateY(-38px);opacity:0;animation-timing-function:cubic-bezier(.4,0,.7,.4)}
+      ${pc(inA+0.12)}%{opacity:1}
+      ${pc(inB-0.07)}%{transform:translateY(2px)}
+      ${pc(inB)}%{transform:translateY(0);opacity:1;animation-timing-function:ease-in}
+      ${pc(outA)}%{transform:translateY(0);opacity:1}
+      ${pc(outB)}%{transform:translateY(-34px);opacity:0}
+      100%{transform:translateY(-38px);opacity:0}}`;
+  }).join('');
+
+  const body=laid.map(s=>{
+    const outer=`translate(${(s.dx*size).toFixed(1)},${s.y.toFixed(1)}) rotate(${(s.rot*180/Math.PI).toFixed(1)})`;
+    return `<g transform="${outer}"><g style="animation:${uid}-${s.i} ${T}s linear infinite both">`
+      + `<path d="${stonePath(s.seed,s.rx,s.ry)}" fill="${TONE[s.i]}" stroke="${INK}" stroke-width="${Math.max(1,size*0.023).toFixed(1)}" paint-order="stroke fill"/>`
+      + `</g></g>`;
+  }).reverse().join('');
+
+  return `<svg class="keystone-mark" width="${vw.toFixed(0)}" height="${vh.toFixed(0)}" viewBox="${(-vw/2).toFixed(1)} ${(minY-P).toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}"><style>${frames}</style>${body}</svg>`;
+}
+
+/** the screening instrument at panel scale, with its leaders */
+function scanpanel(){
+  const R=196, N=84, k=R/150;
+  let t='';
+  for(let i=0;i<N;i++){
+    const a=(i/N)*Math.PI*2-Math.PI/2, len=(i%7===0?13:8.5)*k;
+    t+=`<line x1="${(Math.cos(a)*R).toFixed(1)}" y1="${(Math.sin(a)*R).toFixed(1)}" x2="${(Math.cos(a)*(R+len)).toFixed(1)}" y2="${(Math.sin(a)*(R+len)).toFixed(1)}" stroke="rgba(226,240,246,0.88)" stroke-width="1.8"/>`;
+  }
+  const c=stack(R*0.80,3,true);
+  const inner=c.svg.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
+  const S=Math.round(R*1.62);
+  return `<svg width="${S*2}" height="${S*2}" viewBox="${-S} ${-S} ${S*2} ${S*2}">
+    <g class="dial" transform="scale(1,1.07)">${t}
+      <ellipse rx="${(R*0.7).toFixed(1)}" ry="${(R*0.7).toFixed(1)}" fill="none" stroke="rgba(226,240,246,0.42)" stroke-width="1.3" stroke-dasharray="1 7"/></g>
+    <g transform="translate(0,${(c.vh*0.34).toFixed(1)})">${inner}</g>
+    <g stroke="rgba(255,255,255,0.34)" stroke-width="1.3" stroke-dasharray="3 6">
+      <line x1="${(-R*1.42).toFixed(1)}" y1="${(-R*0.22).toFixed(1)}" x2="${(-R*0.5).toFixed(1)}" y2="${(-R*0.22).toFixed(1)}"/>
+      <line x1="${(R*0.5).toFixed(1)}" y1="${(R*0.16).toFixed(1)}" x2="${(R*1.42).toFixed(1)}" y2="${(R*0.16).toFixed(1)}"/></g>
+    <g fill="rgba(232,238,244,0.62)" font-family="'Martian Mono',monospace" font-size="11" font-weight="600" letter-spacing="1.6">
+      <text x="${(-R*1.42).toFixed(1)}" y="${(-R*0.28).toFixed(1)}">RECIPIENT</text>
+      <text x="${(R*1.42).toFixed(1)}" y="${(R*0.10).toFixed(1)}" text-anchor="end">AMOUNT</text></g>
+  </svg>`;
+}
+
+/** the mark alone, large and light */
+function markbig(size, T){
+  return mark(size, T).replace(/fill="#[0-9A-Fa-f]{6}"/g, 'fill="#EEF3F8"')
+                   .replace(/stroke="#[0-9A-Fa-f]{6}"/g, 'stroke="rgba(20,25,34,.30)"');
+}
+
 document.querySelectorAll('[data-art]').forEach(el=>{
   const [kind,arg]=el.dataset.art.split(':');
-  el.innerHTML = kind==='cairn'   ? cairn(Number(arg)||104, 5, false).svg
+  el.innerHTML = kind==='stack'   ? stack(Number(arg)||104, 5, false).svg
     : kind==='scanner' ? scanner(Number(arg)||86)
     : kind==='bars'    ? bars()
+    : kind==='mark'    ? mark(Number(arg)||96)
+    : kind==='scanpanel'? scanpanel()
+    : kind==='markbig' ? markbig(Number(arg)||230, Number(el.dataset.period)||undefined)
     : kind==='strip'   ? strip() : '';
 });

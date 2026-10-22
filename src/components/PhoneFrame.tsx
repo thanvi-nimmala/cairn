@@ -36,8 +36,11 @@ function StatusBar() {
 }
 
 /** Device bezel + ambient field + Dynamic Island + home indicator. */
-export function PhoneFrame({ children, mood = 'calm', bare = false }: {
+export function PhoneFrame({ children, mood = 'calm', bare = false, cutout = false }: {
   children: ReactNode; mood?: Mood; bare?: boolean
+  /** the device alone on transparency — no stage bloom, no cast shadow, so
+      the capture can be dropped onto any page without a rectangle behind it */
+  cutout?: boolean
 }) {
   // bare = the screen alone at 390x844, for capturing stills that get dropped
   // into a device frame elsewhere (the portfolio supplies its own bezel)
@@ -66,19 +69,23 @@ export function PhoneFrame({ children, mood = 'calm', bare = false }: {
   return (
     <div style={{ position: 'relative', width: W, height: H, flexShrink: 0 }}>
       {/* ambient bloom cast onto the stage behind the device */}
-      <div aria-hidden style={{
-        position: 'absolute', inset: -90, borderRadius: '50%', pointerEvents: 'none',
-        background: mood === 'alert'
-          ? 'radial-gradient(closest-side, color-mix(in srgb, var(--danger) 30%, transparent), transparent 74%)'
-          : 'radial-gradient(closest-side, var(--accent-glow), transparent 72%)',
-        filter: 'blur(50px)', opacity: 0.75, transition: 'background .8s ease',
-      }} />
+      {!cutout && (
+        <div aria-hidden style={{
+          position: 'absolute', inset: -90, borderRadius: '50%', pointerEvents: 'none',
+          background: mood === 'alert'
+            ? 'radial-gradient(closest-side, color-mix(in srgb, var(--danger) 30%, transparent), transparent 74%)'
+            : 'radial-gradient(closest-side, var(--accent-glow), transparent 72%)',
+          filter: 'blur(50px)', opacity: 0.75, transition: 'background .8s ease',
+        }} />
+      )}
 
       <div style={{
         position: 'relative', width: '100%', height: '100%',
         borderRadius: 56, padding: 11,
         background: 'linear-gradient(150deg, oklch(0.42 0.012 288), oklch(0.17 0.01 288) 42%, oklch(0.30 0.012 288))',
-        boxShadow: '0 50px 110px oklch(0 0 0 / .62), 0 0 0 1px oklch(0.5 0.02 288 / .35), inset 0 0 0 1px oklch(0 0 0 / .6)',
+        boxShadow: cutout
+          ? '0 0 0 1px oklch(0.5 0.02 288 / .35), inset 0 0 0 1px oklch(0 0 0 / .6)'
+          : '0 50px 110px oklch(0 0 0 / .62), 0 0 0 1px oklch(0.5 0.02 288 / .35), inset 0 0 0 1px oklch(0 0 0 / .6)',
       }}>
         <div style={{
           position: 'relative', width: '100%', height: '100%', borderRadius: 45,

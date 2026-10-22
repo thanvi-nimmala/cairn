@@ -52,7 +52,7 @@ export function TxnDetail({ txn, onClose, onFraud }: { txn: Txn; onClose: () => 
           </span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 13 }}>
-              {watched ? 'Recurring — kept under watch' : 'Verified by Cairn'}
+              {watched ? 'Recurring — kept under watch' : 'Verified by Keystone'}
             </div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10.5, color: 'var(--text-dim)', marginTop: 1 }}>
               {watched ? 'renews monthly · cancel anytime' : 'encrypted · tokenized · biometric-approved'}

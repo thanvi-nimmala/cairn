@@ -9,7 +9,7 @@ const MARK = [
   { w: 0.21, h: 0.086, dx:  0.02, rot:  0.10, seed: 67 },
 ]
 
-export function CairnMark({
+export function KeystoneMark({
   size = 24, color = 'currentColor', gap,
 }: { size?: number; color?: string; gap?: string }) {
   let y = 0, minY = 0, maxY = 0, maxX = 0

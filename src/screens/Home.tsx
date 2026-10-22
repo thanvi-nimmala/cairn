@@ -1,5 +1,5 @@
 import { Icon } from '../components/Icon'
-import { CairnMark } from '../components/CairnMark'
+import { KeystoneMark } from '../components/KeystoneMark'
 import { TrustBloom } from '../components/TrustBloom'
 import { Avatar } from '../components/ui'
 import { BigStat, Field, FieldAction, ScreenRun } from '../components/field'
@@ -53,9 +53,9 @@ export function Home({ aiLevel, balanceHidden, onToggleBalance, onScore, onPay, 
       <div style={{ padding: '56px 22px 120px' }}>
         {/* ── identity ── */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 30 }}>
-          <CairnMark size={22} color="var(--text)" />
+          <KeystoneMark size={22} color="var(--text)" />
           <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 17, letterSpacing: '-0.02em' }}>
-            Cairn
+            Keystone
           </div>
           <div style={{ fontFamily: 'var(--font-body)', fontSize: 17, color: 'var(--text-faint)' }}>Today</div>
           <button

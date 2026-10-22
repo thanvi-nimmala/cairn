@@ -33,7 +33,7 @@ export interface Scheme {
   /** the scanner inverts — light rim, near-black core */
   scanRim: string
   scanCore: string
-  /** the rock the cairn is made of: base stone, crown stone. The six-step
+  /** the rock the stack is made of: base stone, crown stone. The six-step
       ramp is interpolated, so a scheme never has to list six greys. */
   stone: [string, string]
   /** a scheme dark enough to need inverted text carries its own surfaces.
@@ -292,7 +292,7 @@ export function applyTheme(t: Theme) {
   r.setProperty('--warn', ui.warn)
   r.setProperty('--danger', ui.danger)
 
-  // the cairn is cut from the scheme's own rock. Hardcoded sage stones on a
+  // the stack is cut from the scheme's own rock. Hardcoded sage stones on a
   // clay or plum ground was the one thing that broke every alternate palette.
   const [base, crown] = sc.stone
   for (let i = 0; i < 6; i++) {

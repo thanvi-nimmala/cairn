@@ -35,7 +35,7 @@ export function stonePath(seed: number, rx: number, ry: number, N = 22): string 
   return d + 'Z'
 }
 
-/** One row of the cairn: half-width, half-height, tilt, x-offset — all relative to `size`. */
+/** One row of the stack: half-width, half-height, tilt, x-offset — all relative to `size`. */
 export const STONES: { w: number; h: number; rot: number; dx: number; seed: number }[] = [
   { w: 0.46, h: 0.113, rot: -0.05, dx:  0.00, seed: 3  },
   { w: 0.36, h: 0.106, rot:  0.11, dx: -0.06, seed: 17 },

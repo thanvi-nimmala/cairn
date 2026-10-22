@@ -130,7 +130,7 @@ export function PayFlow({ onClose, onComplete, onMood, startAt, startAmount }: {
               <span style={{ fontSize: 30, color: 'var(--text-faint)', marginRight: 4 }}>$</span>{amount}
             </div>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-faint)' }}>
-              from Cairn •••• 4827
+              from Keystone •••• 4827
             </span>
           </div>
 

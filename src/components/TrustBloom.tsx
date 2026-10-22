@@ -21,16 +21,16 @@ interface Props {
 }
 
 /* Cut from whatever rock the scheme is made of — applyTheme interpolates
-   both ramps, so a clay or plum ground never gets a sage cairn. */
+   both ramps, so a clay or plum ground never gets a sage stack. */
 const TONE = [1, 2, 3, 4, 5, 6].map((i) => `var(--stone-${i})`)
 /* on the scanner field the ramp inverts: the base has to stay off the black */
 const TONE_DARK = [1, 2, 3, 4, 5, 6].map((i) => `var(--stone-d${i})`)
 
 /**
- * The app's score visual: a cairn. Each stone is one protection that is set,
+ * The app's score visual: the stack. Each stone is one protection that is set,
  * so the stack height *is* the score — six stones is the full six. Agitation
  * unsettles the crown rather than roughening everything, because an unsteady
- * cairn is legible in a way a ragged wave is not.
+ * stack is legible in a way a ragged wave is not.
  */
 export function TrustBloom({
   score, size = 150, label = true, animate = true, agitation = 0,

@@ -33,7 +33,14 @@ type Overlay = { type: 'pay' } | { type: 'fraud' } | { type: 'cards' } | { type:
 const SHOT = new URLSearchParams(location.search).get('shot')
 /** ?scheme=<name> overrides the palette, so a colour study is a URL not a rebuild */
 const SCHEME = new URLSearchParams(location.search).get('scheme')
+/** ?device=<scene> renders the phone alone on transparency, for reels and
+    stills that sit on the portfolio page without a rectangle behind them */
+const DEVICE = new URLSearchParams(location.search).get('device')
+/** ?reel=<id> plays one reel on the cut-out device, for headless recording.
+    The stage, the rail and the demo bar stay out of the frame entirely. */
+const REEL = new URLSearchParams(location.search).get('reel')
 if (SHOT) document.documentElement.dataset.still = ''
+if (DEVICE || REEL) document.documentElement.dataset.cutout = ''
 
 export default function App() {
   const [theme, setTheme] = useState<Theme>(() => {
@@ -106,6 +113,25 @@ export default function App() {
   /* ── autoplay reels ─────────────────────────────────────── */
   const demo = useDemoRunner({ goto: (id) => goto(id), set, setMood })
 
+  /* ?reel= starts one reel and tells the recorder when it is finished, so a
+     capture runs to the reel's own length instead of a guessed duration.
+     Held in a ref and fired once: `demo` is a fresh object every render, so
+     depending on it made the effect's own cleanup cancel its timers. */
+  const demoRef = useRef(demo)
+  demoRef.current = demo
+  useEffect(() => {
+    if (!REEL) return
+    const d = demoRef.current
+    const r = d.reels.find((x) => x.id === REEL)
+    if (!r) return
+    const t = window.setTimeout(() => demoRef.current.play(REEL), 500)
+    const done = window.setTimeout(() => {
+      ;(window as unknown as { __reelDone?: boolean }).__reelDone = true
+    }, 500 + r.seconds * 1000 + 1200)
+    return () => { clearTimeout(t); clearTimeout(done) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   /* ── keyboard shortcuts ─────────────────────────────────── */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -162,8 +188,8 @@ export default function App() {
 
   const activeScene = SCENES.find((s) => s.id === scene)
 
-  if (SHOT) {
-    const [name, variant] = SHOT.split(':')
+  if (SHOT || DEVICE) {
+    const [name, variant] = (SHOT || DEVICE || '').split(':')
     const ai = (variant as typeof theme.aiLevel) || theme.aiLevel
     const shotMood: Mood = name === 'fraud' ? 'alert' : name === 'screening' ? 'scan' : name === 'success' ? 'success' : 'calm'
     const noop = () => {}
@@ -185,38 +211,49 @@ export default function App() {
       txn:       <TxnDetail txn={ACTIVITY[2]} onClose={noop} onFraud={noop} />,
     }
     const needsTabBar = ['home', 'activity', 'security', 'profile'].includes(name)
+    const body = (
+      <>
+        {screens[name] ?? <Home aiLevel={ai} balanceHidden={false} onToggleBalance={noop} onScore={noop} onPay={noop} onCards={noop} onTxn={noop} onFraud={noop} />}
+        {needsTabBar && <TabBar tab={(name as Tab)} setTab={noop} onPay={noop} />}
+      </>
+    )
+    // ?device= keeps the bezel and drops everything behind it
+    if (DEVICE && !REEL) {
+      return (
+        <div style={{ width: 390, height: 844 }}>
+          <PhoneFrame cutout mood={shotMood}>{body}</PhoneFrame>
+        </div>
+      )
+    }
     return (
       <div style={{ width: 390, height: 844, overflow: 'hidden' }}>
-        <PhoneFrame bare mood={shotMood}>
-          {screens[name] ?? <Home aiLevel={ai} balanceHidden={false} onToggleBalance={noop} onScore={noop} onPay={noop} onCards={noop} onTxn={noop} onFraud={noop} />}
-          {needsTabBar && <TabBar tab={(name as Tab)} setTab={noop} onPay={noop} />}
-        </PhoneFrame>
+        <PhoneFrame bare mood={shotMood}>{body}</PhoneFrame>
       </div>
     )
   }
 
   return (
     <div style={{ position: 'relative', height: '100%', width: '100%', overflow: 'hidden' }}>
-      {/* stage backdrop */}
-      <div aria-hidden style={{
+      {/* stage backdrop — dropped in reel mode so the device sits on nothing */}
+      {!REEL && <div aria-hidden style={{
         position: 'absolute', inset: 0,
         background:
           'radial-gradient(1100px 620px at 50% 40%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 70%),' +
           'radial-gradient(900px 500px at 12% 90%, color-mix(in srgb, var(--accent-3) 9%, transparent), transparent 68%),' +
           'var(--ink-deep)',
-      }} />
-      <div aria-hidden style={{
+      }} />}
+      {!REEL && <div aria-hidden style={{
         position: 'absolute', inset: 0, opacity: 0.5,
         backgroundImage: 'radial-gradient(rgba(26, 29, 26, .055) 1px, transparent 1px)',
         backgroundSize: '26px 26px',
         maskImage: 'radial-gradient(closest-side at 50% 45%, transparent 32%, black 90%)',
         WebkitMaskImage: 'radial-gradient(closest-side at 50% 45%, transparent 32%, black 90%)',
-      }} />
-      <div className="grain" style={{ opacity: 0.2 }} />
+      }} />}
+      {!REEL && <div className="grain" style={{ opacity: 0.2 }} />}
 
       <div
         ref={stageRef}
-        className={`stage${recording ? ' recording' : ''}`}
+        className={`stage${recording || REEL ? ' recording' : ''}`}
         style={{ position: 'relative', height: '100%', display: 'flex' }}
       >
         <div className="rail"><SceneRail active={scene} onPick={goto} /></div>
@@ -225,7 +262,7 @@ export default function App() {
           flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center', gap: 18, padding: '20px 12px',
         }}>
-          {!recording && (
+          {!recording && !REEL && (
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 17, letterSpacing: '-0.02em' }}>
                 {activeScene?.label}
@@ -236,7 +273,7 @@ export default function App() {
 
           <div className="phone-wrap">
             <div className="phone-scaler">
-            <PhoneFrame mood={mood}>
+            <PhoneFrame mood={mood} cutout={!!REEL}>
               {body}
               <AnimatePresence>
                 {overlay?.type === 'pay' && (

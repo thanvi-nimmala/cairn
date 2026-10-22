@@ -3,7 +3,7 @@ import { enter } from '../lib/motion'
 import { useEffect, useState } from 'react'
 import { Icon } from '../components/Icon'
 import { FaceScan } from '../components/FaceScan'
-import { CairnMark } from '../components/CairnMark'
+import { KeystoneMark } from '../components/KeystoneMark'
 import { TrustBloom } from '../components/TrustBloom'
 import { Button, Screen } from '../components/ui'
 
@@ -32,9 +32,9 @@ export function Welcome({ onNext }: { onNext: () => void }) {
           initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={enter(0.05)}
           style={{ display: 'flex', alignItems: 'center', gap: 11 }}
         >
-          <CairnMark size={40} color="var(--text)" gap="var(--ink)" />
+          <KeystoneMark size={40} color="var(--text)" gap="var(--ink)" />
           <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 21, letterSpacing: '-0.02em' }}>
-            Cairn
+            Keystone
           </span>
         </motion.div>
 

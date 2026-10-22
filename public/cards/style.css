@@ -1,4 +1,4 @@
-/* Cairn — feature cards.
+/* Keystone — feature cards.
    Glass panes over the feature's own screen, blurred. Using the product's
    real screens rather than stock photography means every card is sourced
    from the thing it describes. */
@@ -118,3 +118,22 @@ body {
 .legend .on { color: var(--text); }
 
 .row { display: flex; gap: 26px; align-items: flex-end; }
+
+
+/* ── the mark, assembling ─────────────────────────────────────
+   The stack is a thing someone builds, one stone at a time, and the
+   logo should do what the object does. Each stone falls, settles,
+   and the finished stack holds for most of the cycle — the pause
+   is the point, otherwise it reads as a loader. */
+@keyframes stack {
+  0%        { transform: translateY(-38px); opacity: 0; }
+  5%        { opacity: 1; }
+  13%       { transform: translateY(2px); }
+  17%       { transform: translateY(0); }
+  88%       { transform: translateY(0); opacity: 1; }
+  96%, 100% { transform: translateY(-38px); opacity: 0; }
+}
+.logo-card { min-height: 214px; }
+.logo-card .art { position: static; align-self: center; margin: 2px 0 10px; }
+.logo-card .title, .logo-card .foot { max-width: 100%; }
+.logo-card .foot { text-align: center; }

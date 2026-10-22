@@ -124,7 +124,7 @@ export function Profile({ mode, onMode }: { mode: Mode; onMode: (m: Mode) => voi
         <Icon name="logout" size={17} />Sign out
       </button>
       <p style={{ textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-faint)', marginTop: 14 }}>
-        Cairn 2.4.0 · model v42 · prototype
+        Keystone 2.4.0 · model v42 · prototype
       </p>
     </Screen>
   )

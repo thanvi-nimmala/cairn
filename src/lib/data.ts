@@ -6,7 +6,7 @@ export const USER = {
   handle: '@elenam',
   initials: 'EM',
   balance: 8642.18,
-  accountType: 'Cairn Secure · Personal',
+  accountType: 'Keystone Secure · Personal',
   card: '•••• 4827',
   score: 96,
   hue: 152,
@@ -25,13 +25,13 @@ export const CONTACTS: Contact[] = [
 export const ACTIVITY: Txn[] = [
   {
     id: 't1', kind: 'out', party: 'SQ *SIDECAR DOUGHNUTS', handle: '@sidecar', initials: 'SC', hue: 38,
-    amount: 18.4, when: 'Today · 9:24 AM', cat: 'Dining', method: 'Cairn •••• 4827',
+    amount: 18.4, when: 'Today · 9:24 AM', cat: 'Dining', method: 'Keystone •••• 4827',
     risk: 'safe', note: 'Morning order', biz: true,
   },
   {
     id: 't2', kind: 'flagged', party: 'DNH*LUMOSTORE LTD', handle: '@lumostore', initials: 'LS', hue: 16,
-    amount: 482, when: 'Today · 8:51 AM', cat: 'Online purchase', method: 'Cairn •••• 4827',
-    risk: 'high', note: 'Held by Cairn',
+    amount: 482, when: 'Today · 8:51 AM', cat: 'Online purchase', method: 'Keystone •••• 4827',
+    risk: 'high', note: 'Held by Keystone',
     factors: [
       { label: 'Unknown merchant',   detail: "First payment to this account, ever",     level: 'high', weight: 0.94 },
       { label: 'Unusual amount',     detail: '6.2× your typical online purchase',        level: 'high', weight: 0.86 },
@@ -42,12 +42,12 @@ export const ACTIVITY: Txn[] = [
   },
   {
     id: 't3', kind: 'in', party: 'Ravi M.', handle: '@ravim', initials: 'RM', hue: 152,
-    amount: 120, when: 'Yesterday · 6:12 PM', cat: 'Transfer', method: 'Cairn balance',
+    amount: 120, when: 'Yesterday · 6:12 PM', cat: 'Transfer', method: 'Keystone balance',
     risk: 'safe', note: 'Dinner split',
   },
   {
     id: 't4', kind: 'out', party: 'Metro Transit', handle: '@metro', initials: 'MT', hue: 152,
-    amount: 2.75, when: 'Yesterday · 8:03 AM', cat: 'Transport', method: 'Cairn •••• 4827',
+    amount: 2.75, when: 'Yesterday · 8:03 AM', cat: 'Transport', method: 'Keystone •••• 4827',
     risk: 'safe', note: 'Tap to ride', biz: true,
   },
   {
@@ -57,7 +57,7 @@ export const ACTIVITY: Txn[] = [
   },
   {
     id: 't6', kind: 'out', party: 'Nadia K.', handle: '@nadiak', initials: 'NK', hue: 152,
-    amount: 45, when: 'Sun · 2:18 PM', cat: 'Transfer', method: 'Cairn balance',
+    amount: 45, when: 'Sun · 2:18 PM', cat: 'Transfer', method: 'Keystone balance',
     risk: 'safe', note: 'Concert tickets',
   },
   {
@@ -85,7 +85,7 @@ export const MONITORING: MonitorEvent[] = [
 ]
 
 export const CARDS: PayCard[] = [
-  { id: 'k1', label: 'Cairn Secure',  kind: 'physical', last4: '4827', expiry: '09/29', frozen: false, spent: 1284.5, limit: 4000, hue: 152 },
+  { id: 'k1', label: 'Keystone Secure',  kind: 'physical', last4: '4827', expiry: '09/29', frozen: false, spent: 1284.5, limit: 4000, hue: 152 },
   { id: 'k2', label: 'Subscriptions',   kind: 'virtual',  last4: '9931', expiry: '02/28', frozen: false, spent: 96,     limit: 250,  hue: 128 },
   { id: 'k3', label: 'Marsh & Co.',  kind: 'business', last4: '5510', expiry: '11/30', frozen: true,  spent: 3120,   limit: 9000, hue: 96 },
 ]

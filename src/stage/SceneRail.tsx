@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { SCENES, type SceneId } from './scenes'
-import { CairnMark } from '../components/CairnMark'
+import { KeystoneMark } from '../components/KeystoneMark'
 
 const GROUPS = ['Onboarding', 'Core', 'Flows'] as const
 
@@ -12,10 +12,10 @@ export function SceneRail({ active, onPick }: { active: SceneId; onPick: (id: Sc
     }} className="scroll">
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 10 }}>
-          <CairnMark size={28} color="var(--stage-text)" />
+          <KeystoneMark size={28} color="var(--stage-text)" />
           <div>
             <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, letterSpacing: '-0.02em' }}>
-              Cairn
+              Keystone
             </div>
             <div className="mono-label" style={{ fontSize: 9 }}>frontend shell</div>
           </div>

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   Cairn — design tokens + primitives
+   Keystone — design tokens + primitives
    Identity: plaster ground, sage accent, one acid tick for the scanner
    ═══════════════════════════════════════════════════════════════ */
 
@@ -80,7 +80,7 @@
   --glass-lit:    rgba(224, 238, 255, 0.32);
   --glass-shadow: rgba(0, 0, 0, 0.3);
 
-  /* the cairn, base to crown — interpolated per scheme by applyTheme */
+  /* the stack, base to crown — interpolated per scheme by applyTheme */
   --stone-1: #4E5A69; --stone-2: #636F7D; --stone-3: #788491;
   --stone-4: #8C98A6; --stone-5: #A1ADBA; --stone-6: #B6C2CE;
   --stone-d1: #CFD7DF; --stone-d2: #C0C8D0; --stone-d3: #B1B9C2;
@@ -117,6 +117,8 @@
 
 html, body { height: 100%; margin: 0; overflow: hidden; }
 #root { position: fixed; inset: 0; }
+
+html[data-cutout], html[data-cutout] body, html[data-cutout] #root { background: transparent !important; }
 
 body {
   background: var(--ink-deep);

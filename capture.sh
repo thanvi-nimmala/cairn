@@ -4,7 +4,7 @@
 #   npm run dev   (in another shell)   then   ./capture.sh
 set -euo pipefail
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-BASE="${BASE:-http://localhost:5183/cairn/}"
+BASE="${BASE:-http://localhost:5183/keystone/}"
 OUT="${OUT:-shots}"
 SCENES=(welcome calibrate faceid home activity security profile cards txn)
 
