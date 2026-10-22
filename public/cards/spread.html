@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8" />
+<style>
+/* Six real screens, in order of the flow, on the same ground the panels use.
+   An even row reads as a contact sheet, so they rise and fall slightly —
+   enough to look laid out by a hand rather than exported from a grid. */
+*{box-sizing:border-box;margin:0}
+html,body{width:2200px;height:880px;overflow:hidden;background:#141922}
+.bg{position:fixed;inset:0;overflow:hidden;
+  background:linear-gradient(162deg,#2E3744,#222A34 56%,#171C24)}
+.bg i{position:absolute;display:block;border-radius:50%;filter:blur(120px);opacity:.8}
+.b1{width:56%;height:70%;left:-8%;top:-18%;background:#6E8DA8}
+.b2{width:50%;height:66%;right:-10%;top:4%;background:#53627A}
+.b3{width:46%;height:60%;left:30%;bottom:-24%;background:#8FA6BE}
+.bg u{position:absolute;inset:0;opacity:.11;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+.row{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;gap:34px;padding:0 60px}
+.row img{width:300px;height:auto;display:block;flex:0 0 auto;
+  filter:drop-shadow(0 34px 56px rgba(0,0,0,.52))}
+.row img:nth-child(1){transform:translateY(-26px)}
+.row img:nth-child(2){transform:translateY(16px)}
+.row img:nth-child(3){transform:translateY(-14px)}
+.row img:nth-child(4){transform:translateY(22px)}
+.row img:nth-child(5){transform:translateY(-20px)}
+.row img:nth-child(6){transform:translateY(10px)}
+</style></head><body>
+<div class="bg"><i class="b1"></i><i class="b2"></i><i class="b3"></i><u></u></div>
+<div class="row">
+  <img src="./dev/welcome.png" alt="" />
+  <img src="./dev/home.png" alt="" />
+  <img src="./dev/activity.png" alt="" />
+  <img src="./dev/screening.png" alt="" />
+  <img src="./dev/fraud.png" alt="" />
+  <img src="./dev/security.png" alt="" />
+</div>
+</body></html>

@@ -12,7 +12,9 @@ import { join } from 'node:path'
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 const BASE = process.env.BASE ?? 'http://localhost:5183/keystone/'
 const OUT = process.env.OUT ?? 'reels'
-const FPS = 30
+/* 24 rather than 30: these carry continuous UI motion, so the saving is
+   real, and nothing here reads as film */
+const FPS = 24
 /** the page under the device, so the capture composites onto the portfolio */
 const PAGE_BG = process.env.PAGE_BG ?? '#13161C'
 
@@ -75,7 +77,7 @@ for (const id of reels) {
     '-y', '-framerate', String(rate), '-i', join(tmp, 'f%05d.png'),
     '-vf', `fps=${FPS},scale=trunc(iw/2)*2:trunc(ih/2)*2`,
     '-c:v', 'libx264', '-profile:v', 'high', '-pix_fmt', 'yuv420p',
-    '-crf', '24', '-preset', 'slow', '-movflags', '+faststart', '-an', mp4,
+    '-crf', '25', '-preset', 'slow', '-movflags', '+faststart', '-an', mp4,
   ], { stdio: 'ignore' })
   // a poster for the video element to show before play
   execFileSync(ffmpeg, ['-y', '-i', mp4, '-vf', 'select=eq(n\\,0)', '-frames:v', '1',

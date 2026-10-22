@@ -40,15 +40,9 @@ body{display:grid;place-items:center}
 /* ── the mark alone ───────────────────────────────────────── */
 .solo{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
 .solo svg{display:block}
-  5%{opacity:1}
-  13%{transform:translateY(2px)}
-  17%{transform:translateY(0)}
-  88%{transform:translateY(0);opacity:1}
-  96%,100%{transform:translateY(-40px);opacity:0}
-}
 /* the instrument turns, as it does in the app */
-@keyframes turn{to{transform:scale(1,1.07) rotate(360deg)}}
-.dial{transform:scale(1,1.07);transform-origin:0 0;animation:turn 30s linear infinite}
+@keyframes turn{from{transform:scale(1,1.07) rotate(0deg)}to{transform:scale(1,1.07) rotate(30deg)}}
+.dial{transform-origin:0 0;animation:turn 6s linear infinite}
 </style></head><body>
 <div class="bg"><i class="b1"></i><i class="b2"></i><i class="b3"></i><u></u></div>
 

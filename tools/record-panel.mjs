@@ -21,10 +21,10 @@ const ROOT = 'http://localhost:5183/keystone/cards/'
 const OUT = 'reels'
 /* the cover changes frame to frame throughout, so it is the one that gains
    from a lower rate; the others are mostly held states */
-const RATES = { cover: 24 }
+const RATES = { cover: 24, mark: 24, scan: 24 }
 /* and a touch more compression: at 24fps each frame carries more change,
    so holding CRF 20 just moves the weight rather than removing it */
-const CRFS = { cover: 24 }
+const CRFS = { cover: 24, mark: 24, scan: 24 }
 const FPS = 30
 const SCALE = 2
 const SIZES = { scan: [880, 1120], mark: [900, 1140], cover: [520, 796] }

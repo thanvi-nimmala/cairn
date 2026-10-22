@@ -28,8 +28,10 @@ html,body{width:520px;height:796px;overflow:hidden;background:#141922;
   46%,100% {opacity:0;transform:translateY(-54px) scale(.94)}
 }
 /* the device rises into the space the stack leaves */
-#ph{position:absolute;width:300px;border-radius:30px;overflow:hidden;display:block;
-  box-shadow:0 40px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(226,240,246,.12);
+/* the device still is a transparent cut-out of the real PhoneFrame, so it
+   brings its own bezel — no border-radius or ring here, or they fight it */
+#ph{position:absolute;width:318px;display:block;
+  filter:drop-shadow(0 38px 70px rgba(0,0,0,.55));
   animation:phIn 9s linear infinite both}
 @keyframes phIn{
   0%,42%   {opacity:0;transform:translateY(46px) scale(.96)}

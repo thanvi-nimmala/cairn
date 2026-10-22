@@ -167,8 +167,8 @@ function scanpanel(){
   const inner=c.svg.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
   const S=Math.round(R*1.62);
   return `<svg width="${S*2}" height="${S*2}" viewBox="${-S} ${-S} ${S*2} ${S*2}">
-    <g class="dial" transform="scale(1,1.07)">${t}
-      <ellipse rx="${(R*0.7).toFixed(1)}" ry="${(R*0.7).toFixed(1)}" fill="none" stroke="rgba(226,240,246,0.42)" stroke-width="1.3" stroke-dasharray="1 7"/></g>
+    <g class="dial" transform="scale(1,1.07)">${t}</g>
+    <g transform="scale(1,1.07)"><ellipse rx="${(R*0.7).toFixed(1)}" ry="${(R*0.7).toFixed(1)}" fill="none" stroke="rgba(226,240,246,0.42)" stroke-width="1.3" stroke-dasharray="1 7"/></g>
     <g transform="translate(0,${(c.vh*0.34).toFixed(1)})">${inner}</g>
     <g stroke="rgba(255,255,255,0.34)" stroke-width="1.3" stroke-dasharray="3 6">
       <line x1="${(-R*1.42).toFixed(1)}" y1="${(-R*0.22).toFixed(1)}" x2="${(-R*0.5).toFixed(1)}" y2="${(-R*0.22).toFixed(1)}"/>
